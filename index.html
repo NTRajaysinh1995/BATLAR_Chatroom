@@ -622,7 +622,7 @@
   </div>
 
   <label for="name-input">Your name</label>
-  <input type="text" id="name-input" maxlength="24" placeholder="e.g. Riya" autocomplete="off" />
+  <input type="text" id="name-input" maxlength="24" placeholder="e.g. BATLAR" autocomplete="off" />
   <div id="join-error"></div>
   <button id="join-btn">Join room</button>
   <div class="back-link" id="back-to-start">← use a different room</div>
@@ -728,6 +728,15 @@ function generateRoomCode(){
   return String(Math.floor(10000 + Math.random() * 90000)); // random 5-digit number, 10000–99999
 }
 
+// Checks Firebase to see if a room code actually exists and is currently active
+// (has an owner who created it and has not been closed / emptied out yet).
+function checkRoomActive(roomId){
+  if (!isConfigured) return Promise.resolve(false);
+  return db.ref('rooms/' + roomId + '/meta/active').once('value')
+    .then(snap => snap.val() === true)
+    .catch(() => false);
+}
+
 function goToJoinScreen(roomId, { generated } = {}){
   ROOM_ID = roomId;
   if (isConfigured){
@@ -748,7 +757,11 @@ function goToJoinScreen(roomId, { generated } = {}){
 }
 
 createRoomBtn.addEventListener('click', () => {
+  if (!isConfigured) return;
   const code = generateRoomCode();
+  // Mark the room active immediately so it becomes a real, joinable room —
+  // random codes typed by someone else won't match anything until this happens.
+  db.ref('rooms/' + code + '/meta').set({ active: true, createdAt: firebase.database.ServerValue.TIMESTAMP });
   goToJoinScreen(code, { generated: true });
 });
 
@@ -764,7 +777,17 @@ codeContinueBtn.addEventListener('click', () => {
     return;
   }
   codeError.textContent = '';
-  goToJoinScreen(code, { generated: false });
+  codeContinueBtn.disabled = true;
+  codeContinueBtn.textContent = 'Checking…';
+  checkRoomActive(code).then(active => {
+    codeContinueBtn.disabled = false;
+    codeContinueBtn.textContent = 'Continue';
+    if (!active){
+      codeError.textContent = 'This room doesn\'t exist or is no longer active. Ask for a fresh code.';
+      return;
+    }
+    goToJoinScreen(code, { generated: false });
+  });
 });
 codeInput.addEventListener('keydown', e => { if (e.key === 'Enter') codeContinueBtn.click(); });
 
@@ -777,12 +800,19 @@ backToStart.addEventListener('click', () => {
   joinError.textContent = '';
 });
 
-// If the page was opened via a QR code / shared link like ?room=12345, skip straight to name entry
+// If the page was opened via a QR code / shared link like ?room=12345, skip straight to name entry —
+// but only if that room is actually still active.
 (function checkRoomInUrl(){
   const params = new URLSearchParams(window.location.search);
   const roomParam = params.get('room');
   if (roomParam && /^\d{5}$/.test(roomParam)){
-    goToJoinScreen(roomParam, { generated: false });
+    checkRoomActive(roomParam).then(active => {
+      if (active){
+        goToJoinScreen(roomParam, { generated: false });
+      } else {
+        codeError.textContent = 'That room link is no longer active — it may have closed after everyone left.';
+      }
+    });
   }
 })();
 
@@ -828,16 +858,27 @@ function renderMessage(msg){
   messagesEl.scrollTop = messagesEl.scrollHeight;
 }
 
+let onlineCount = 0; // how many people this client currently sees in the room
+let roomClosedHandled = false;
+
 function renderOnlineUsers(usersObj){
-  onlineStrip.innerHTML = '';
   const names = Object.values(usersObj || {}).map(u => u.name);
-  if (names.length === 0) return;
+  onlineCount = names.length;
+
+  onlineStrip.innerHTML = '';
   names.forEach(n => {
     const b = document.createElement('div');
     b.className = 'badge';
     b.innerHTML = `<span class="dot" style="animation:none;"></span> ${escapeHtml(n)}`;
     onlineStrip.appendChild(b);
   });
+
+  // If the users list is empty, everyone has left this room — close it for good
+  // so the code can no longer be used to join. Whichever client is still around
+  // to see this (e.g. the second-to-last person leaving) performs the cleanup.
+  if (names.length === 0 && roomRef && myPresenceKey){
+    roomRef.remove();
+  }
 }
 
 function joinRoom(){
@@ -851,6 +892,21 @@ function joinRoom(){
     return;
   }
 
+  joinBtn.disabled = true;
+  joinError.textContent = '';
+
+  // Final, authoritative check right before entry — the room must still be active.
+  checkRoomActive(ROOM_ID).then(active => {
+    if (!active){
+      joinBtn.disabled = false;
+      joinError.textContent = 'This room doesn\'t exist or has closed (everyone left). Go back and use a fresh code.';
+      return;
+    }
+    enterRoom(name);
+  });
+}
+
+function enterRoom(name){
   myName = name;
   myJoinTime = Date.now();
 
@@ -861,11 +917,30 @@ function joinRoom(){
   // Auto-remove this user the moment their connection drops (tab closed, browser closed, network lost)
   presenceRef.onDisconnect().remove();
 
-  // Also remove on manual navigation away, as a backup
-  window.addEventListener('pagehide', () => { presenceRef.remove(); });
+  // Also remove on manual navigation away, as a backup. If this client is the
+  // last one left in the room, close the whole room instead of just leaving.
+  window.addEventListener('pagehide', () => {
+    if (onlineCount <= 1 && roomRef){
+      roomRef.remove();
+    } else {
+      presenceRef.remove();
+    }
+  });
 
   // Watch online users list
   usersRef.on('value', snap => renderOnlineUsers(snap.val()));
+
+  // Watch whether the room itself is still active — if another tab/device closes it
+  // (last person left there), reflect that here too.
+  roomRef.child('meta/active').on('value', snap => {
+    if (snap.val() !== true && !roomClosedHandled){
+      roomClosedHandled = true;
+      addSystemLine('This room has closed — everyone has left.');
+      msgInput.disabled = true;
+      sendBtn.disabled = true;
+      roomSub.textContent = 'room closed';
+    }
+  });
 
   // Typing presence — my own typing flag, auto-removed on disconnect
   myTypingRef = typingRef.child(myPresenceKey);
