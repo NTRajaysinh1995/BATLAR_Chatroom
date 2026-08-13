@@ -15,6 +15,8 @@
 
 <!-- QR code generator -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<!-- PDF export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 :root{
@@ -51,15 +53,9 @@ form#send-form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line
 #qr-overlay,#admin-overlay{display:none;position:fixed;inset:0;background:rgba(3,8,18,.78);backdrop-filter:blur(5px);align-items:center;justify-content:center;z-index:50;padding:18px}.overlay-card{background:#111c2f;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}#qr-card{padding:26px;text-align:center;max-width:320px}#qr-card h3{margin:0 0 5px;font-size:18px}#qr-card p{color:var(--muted);font-size:11px;margin:0 0 17px}#qr-code-box{background:#fff;padding:12px;border-radius:8px;display:inline-block}#qr-close{margin-top:16px;background:transparent;border:1px solid var(--line);color:var(--muted);padding:8px 18px;font-size:11px}
 /* ADMIN SECURITY CONSOLE */
 #admin-card{width:min(1180px,96vw);height:min(760px,92vh);background:#0d1727;border:1px solid #30425e;border-radius:14px;box-shadow:0 30px 90px rgba(0,0,0,.55);overflow:hidden;display:flex;flex-direction:column;padding:0;max-width:none;max-height:none}.admin-topbar{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:#101c30;border-bottom:1px solid var(--line)}.admin-brand{display:flex;align-items:center;gap:11px}.admin-logo{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#2563eb,#4da3ff);display:grid;place-items:center;color:#fff;font-weight:900}.admin-brand strong{font-size:15px}.admin-brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:1.2px;margin-top:2px}.admin-status{display:flex;align-items:center;gap:8px;font-size:10px;color:#9fb0c8;font-weight:800;letter-spacing:.7px}.admin-body{display:flex;min-height:0;flex:1}.admin-sidebar{width:330px;border-right:1px solid var(--line);background:#0b1423;display:flex;flex-direction:column;min-width:280px}.admin-side-head{padding:16px;border-bottom:1px solid var(--line)}.admin-side-title{font-size:12px;font-weight:900;letter-spacing:1px;text-transform:uppercase}.admin-side-sub{font-size:10px;color:var(--muted);margin-top:4px}.admin-stats{display:flex;gap:7px;margin-top:12px}.stat{flex:1;background:#111e32;border:1px solid var(--line);border-radius:8px;padding:8px}.stat b{display:block;font-size:18px}.stat span{font-size:9px;color:var(--muted);text-transform:uppercase}.admin-rooms{padding:10px;overflow-y:auto;flex:1}.admin-room-card{background:#101d31;border:1px solid #253650;border-radius:9px;padding:11px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:9px;transition:.15s;cursor:pointer}.admin-room-card:hover{border-color:#3d6fa8;background:#14243c}.admin-room-card.selected{border-color:var(--accent);background:#132a48;box-shadow:inset 3px 0 0 var(--accent)}.arc-left{min-width:0}.arc-code{font-size:14px;font-weight:900;letter-spacing:1.8px;color:#cfe5ff}.arc-meta{font-size:9.5px;color:var(--muted);margin-top:4px;line-height:1.45}.arc-actions{display:flex;align-items:center;gap:6px}.arc-live{font-size:8px;color:#4ade80;font-weight:900;letter-spacing:.8px}.arc-close-btn{background:transparent;border:1px solid #74363b;color:#f87171;font-size:9px;padding:5px 7px}.arc-close-btn:hover{background:#7f1d1d;color:#fff}.admin-empty{padding:30px 12px;text-align:center;color:var(--muted);font-size:11px}.admin-monitor{flex:1;min-width:0;display:flex;flex-direction:column;background:#0a1321}.monitor-head{padding:16px 18px;border-bottom:1px solid var(--line);background:#101b2e}.monitor-title-row{display:flex;justify-content:space-between;align-items:center;gap:10px}.monitor-title{font-size:16px;font-weight:900}.monitor-title span{color:var(--accent);letter-spacing:2px}.monitor-meta{font-size:10px;color:var(--muted);margin-top:5px}.monitor-actions{display:flex;gap:7px}.monitor-btn{background:#17263d;border:1px solid var(--line);color:#b6c5d8;padding:7px 10px;font-size:9px;font-weight:800}.monitor-btn:hover{border-color:var(--accent);color:#fff}.monitor-btn.danger{border-color:#71353a;color:#f87171}.monitor-users{display:flex;gap:6px;flex-wrap:wrap;padding:9px 18px;border-bottom:1px solid var(--line);background:#0d1828;min-height:39px}.monitor-user{font-size:9px;color:#c4d1e0;background:#14243a;border:1px solid #2a3d59;padding:4px 7px;border-radius:20px}.monitor-messages{flex:1;overflow-y:auto;padding:18px}.monitor-message{display:grid;grid-template-columns:90px 1fr auto;gap:10px;padding:10px 0;border-bottom:1px solid rgba(49,66,91,.45)}.monitor-message:last-child{border-bottom:0}.mm-name{font-size:11px;font-weight:900;color:#a9cfff;overflow:hidden;text-overflow:ellipsis}.mm-text{font-size:12px;line-height:1.5;white-space:pre-wrap;word-break:break-word}.mm-time{font-size:9px;color:var(--muted);white-space:nowrap}.monitor-empty{height:100%;display:grid;place-items:center;color:var(--muted);font-size:11px;text-align:center;padding:30px}.admin-footer{padding:10px 16px;border-top:1px solid var(--line);background:#101b2e;display:flex;justify-content:space-between;align-items:center}.admin-footer-note{font-size:9px;color:var(--muted)}#admin-close{background:transparent;border:1px solid var(--line);color:#aebdd0;padding:7px 14px;font-size:10px;font-weight:800}#admin-close:hover{border-color:var(--accent);color:#fff}.pin-wrap{width:min(400px,94vw);background:#111c2f;border:1px solid var(--line);border-radius:14px;padding:26px;box-shadow:var(--shadow)}.pin-wrap h3{margin:0 0 6px;font-size:19px}.pin-wrap p{color:var(--muted);font-size:11px;line-height:1.5;margin:0 0 16px}.pin-actions{display:flex;gap:8px}.pin-actions button{flex:1;padding:11px}.pin-primary{background:var(--accent2);color:#fff;font-weight:800}.pin-cancel{background:transparent;border:1px solid var(--line);color:var(--muted)}#admin-pin-error{color:#f87171;font-size:11px;margin-top:8px;min-height:14px;font-weight:700;text-align:center}
-@media(max-width:800px){body{padding:0}.admin-body{flex-direction:column}.admin-sidebar{width:100%;height:42%;min-width:0;border-right:0;border-bottom:1px solid var(--line)}.admin-monitor{height:58%}.monitor-message{grid-template-columns:70px 1fr}.admin-topbar{height:56px;padding:0 13px}.admin-card{width:100vw;height:100vh;border-radius:0}.admin-side-head{padding:11px}.admin-rooms{display:flex;gap:7px;overflow-x:auto;overflow-y:hidden}.admin-room-card{min-width:210px;margin:0}.arc-close-btn{display:none}}
+@media(max-width:800px){body{padding:0}.admin-body{flex-direction:column}.admin-sidebar{width:100%;height:42%;min-width:0;border-right:0;border-bottom:1px solid var(--line)}.admin-monitor{height:58%}.monitor-message{grid-template-columns:70px 1fr}.admin-topbar{height:56px;padding:0 13px}#admin-card{width:100vw;height:100vh;border-radius:0}.admin-side-head{padding:11px}.admin-rooms{display:flex;gap:7px;overflow-x:auto;overflow-y:hidden}.admin-room-card{min-width:210px;margin:0}.arc-close-btn{display:none}}
 @media(max-width:480px){#chat-screen{height:100vh;border-radius:0}#start-screen,#join-screen{border-radius:0;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:24px 20px}.monitor-title{font-size:14px}.monitor-message{grid-template-columns:1fr auto}.mm-name{grid-column:1}.mm-time{grid-column:2}.mm-text{grid-column:1 / -1}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-
-.admin-search{margin-top:10px}.admin-search input{width:100%;background:#0b1525;border:1px solid #2a3d59;color:#dbeafe;border-radius:8px;padding:9px 10px;font-size:11px;outline:none}.admin-search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(77,163,255,.1)}
-.admin-room-card .arc-live{display:inline-flex;align-items:center;gap:4px;padding:3px 6px;border-radius:20px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2)}
-.monitor-head{box-shadow:0 4px 20px rgba(0,0,0,.12)}
-.monitor-badge{display:inline-flex;align-items:center;gap:5px;margin-left:8px;padding:3px 7px;border-radius:20px;font-size:8px;letter-spacing:.7px;background:#14243a;border:1px solid #2a3d59;color:#9fb0c8;vertical-align:middle}
-@media(max-width:800px){.admin-search{margin-top:8px}.admin-room-card{min-width:230px}.admin-sidebar{height:45%}.admin-monitor{height:55%}}
 </style>
 </head>
 <body>
@@ -185,8 +181,7 @@ form#send-form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line
           <div class="admin-side-head">
             <div class="admin-side-title">Active Chat Rooms</div>
             <div class="admin-side-sub">Select a room to open its live read-only monitor.</div>
-            <div class="admin-stats"><div class="stat"><b id="admin-room-count">0</b><span>Rooms</span></div><div class="stat"><b id="admin-user-count">0</b><span>Users</span></div></div>
-            <div class="admin-search"><input id="admin-room-search" type="text" placeholder="Search room code..." autocomplete="off"></div>
+            <div class="admin-stats"><div class="stat"><b id="admin-room-count">0</b><span>Rooms</span></div><div class="stat"><b id="admin-user-count">0</b><span>Users</span></div><div class="stat"><b id="admin-archive-count">0</b><span>Archived</span></div></div>
           </div>
           <div id="admin-rooms-list" class="admin-rooms"></div>
           <div id="admin-empty-note" class="admin-empty" style="display:none">No active rooms right now.</div>
@@ -194,15 +189,15 @@ form#send-form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line
         <section class="admin-monitor">
           <div class="monitor-head">
             <div class="monitor-title-row">
-              <div><div class="monitor-title">Live Monitor <span id="monitor-room-code">—</span><span class="monitor-badge">READ ONLY</span></div><div class="monitor-meta" id="monitor-meta">Select an active room from the left.</div></div>
-              <div class="monitor-actions"><button id="monitor-refresh" class="monitor-btn">Refresh</button><button id="monitor-close-room" class="monitor-btn danger" style="display:none">Close Room</button></div>
+              <div><div class="monitor-title">Live Monitor <span id="monitor-room-code">—</span></div><div class="monitor-meta" id="monitor-meta">Select an active room from the left.</div></div>
+              <div class="monitor-actions"><button id="monitor-refresh" class="monitor-btn">Refresh</button><button id="monitor-export-pdf" class="monitor-btn" style="display:none">↓ Export PDF</button><button id="monitor-close-room" class="monitor-btn danger" style="display:none">Close Room</button></div>
             </div>
           </div>
           <div id="monitor-users" class="monitor-users"></div>
           <div id="monitor-messages" class="monitor-messages"><div class="monitor-empty">No room selected.<br>Choose an active room to begin monitoring.</div></div>
         </section>
       </div>
-      <div class="admin-footer"><div class="admin-footer-note">READ-ONLY MODERATION · ADMIN DOES NOT JOIN · CLOSED ROOMS → SERVER ARCHIVE → PDF → GMAIL</div><button id="admin-close">Exit Console</button></div>
+      <div class="admin-footer"><div class="admin-footer-note">READ-ONLY MODERATION MODE · ADMIN DOES NOT JOIN THE ROOM</div><button id="admin-close">Exit Console</button></div>
     </div>
   </div>
 </div>
@@ -249,11 +244,13 @@ if (!isConfigured) {
 }
 
 let db;
-let roomsIndexRef; // lightweight metadata only: active flag, createdAt, userCount, lastActivity — never messages
+let roomsIndexRef; // active-room metadata only
+let archivedRoomsRef;
 if (isConfigured) {
   firebase.initializeApp(firebaseConfig);
   db = firebase.database();
   roomsIndexRef = db.ref('roomsIndex');
+  archivedRoomsRef = db.ref('archivedRooms');
 }
 
 let ROOM_ID = "";
@@ -443,14 +440,9 @@ function renderOnlineUsers(usersObj){
   // so the code can no longer be used to join. Whichever client is still around
   // to see this (e.g. the second-to-last person leaving) performs the cleanup.
   if (names.length === 0 && roomRef && myPresenceKey){
-    // Do NOT delete the room here. Firebase Cloud Functions must first
-    // archive the complete transcript and email the PDF.
-    roomRef.child('meta').update({
-      active: false,
-      closing: true,
-      closedAt: firebase.database.ServerValue.TIMESTAMP,
-      closedBy: 'SYSTEM'
-    });
+    // Keep the room data so Admin can export the complete chat after everyone leaves.
+    roomRef.child('meta').update({active:false, closedAt:Date.now()});
+    if (roomsIndexRef) roomsIndexRef.child(ROOM_ID).update({active:false, closedAt:Date.now()});
   }
 }
 
@@ -505,14 +497,9 @@ function enterRoom(name){
   window.addEventListener('pagehide', () => {
     if (roomsIndexRef) roomsIndexRef.child(ROOM_ID).child('userCount').onDisconnect().cancel();
     if (onlineCount <= 1 && roomRef){
-      // Leave the room data intact long enough for the server-side
-      // archive/PDF/email function to process it.
-      roomRef.child('meta').update({
-        active: false,
-        closing: true,
-        closedAt: firebase.database.ServerValue.TIMESTAMP,
-        closedBy: 'SYSTEM'
-      });
+      // Preserve complete chat history for Admin export.
+      roomRef.child('meta').update({active:false, closedAt:Date.now()});
+      if (roomsIndexRef) roomsIndexRef.child(ROOM_ID).update({active:false, closedAt:Date.now()});
     } else {
       presenceRef.remove();
       if (roomsIndexRef){
@@ -696,17 +683,18 @@ const adminRoomsList = document.getElementById('admin-rooms-list');
 const adminEmptyNote = document.getElementById('admin-empty-note');
 const adminRoomCount = document.getElementById('admin-room-count');
 const adminUserCount = document.getElementById('admin-user-count');
+const adminArchiveCount = document.getElementById('admin-archive-count');
 const monitorRoomCode = document.getElementById('monitor-room-code');
 const monitorMeta = document.getElementById('monitor-meta');
 const monitorUsers = document.getElementById('monitor-users');
 const monitorMessages = document.getElementById('monitor-messages');
 const monitorRefresh = document.getElementById('monitor-refresh');
 const monitorCloseRoom = document.getElementById('monitor-close-room');
-const adminRoomSearch = document.getElementById('admin-room-search');
+const monitorExportPdf = document.getElementById('monitor-export-pdf');
 let adminUnlocked = false;
 let adminRoomsCache = {};
+let adminArchivedCache = {};
 let adminSelectedRoom = '';
-let adminRoomSearchText = '';
 let adminMessagesRef = null;
 let adminUsersRef = null;
 let adminMessagesHandler = null;
@@ -725,10 +713,9 @@ function stopAdminMonitor(){
 function closeAdminOverlay(){
   stopAdminMonitor();
   if(roomsIndexRef) roomsIndexRef.off('value',renderAdminRooms);
+  if(archivedRoomsRef) archivedRoomsRef.off('value',renderAdminRooms);
   adminOverlay.style.display='none';
   adminSelectedRoom='';
-  adminRoomSearchText='';
-  if(adminRoomSearch) adminRoomSearch.value='';
 }
 adminLink.addEventListener('click',openAdminOverlay);
 adminCloseIcon.addEventListener('click',closeAdminOverlay);
@@ -739,13 +726,9 @@ adminPinContinue.addEventListener('click',()=>{
   else adminPinError.textContent='Incorrect administrator PIN.';
 });
 adminPinInput.addEventListener('keydown',e=>{if(e.key==='Enter')adminPinContinue.click()});
-monitorRefresh.addEventListener('click',()=>{ if(adminSelectedRoom) selectAdminRoom(adminSelectedRoom); else showAdminPanel(); });
+monitorRefresh.addEventListener('click',()=>{ if(adminSelectedRoom){ const archived=!!adminArchivedCache[adminSelectedRoom]; selectAdminRoom(adminSelectedRoom,archived); } else showAdminPanel(); });
+monitorExportPdf.addEventListener('click',exportSelectedRoomPDF);
 monitorCloseRoom.addEventListener('click',()=>closeMonitoredRoom());
-
-adminRoomSearch.addEventListener('input', () => {
-  adminRoomSearchText = adminRoomSearch.value.trim().toLowerCase();
-  renderAdminRooms({ val: () => adminRoomsCache });
-});
 
 function showAdminPanel(){
   adminPinBox.style.display='none'; adminPanelBox.style.display='flex';
@@ -755,40 +738,115 @@ function showAdminPanel(){
 }
 function fmtAdminTime(ts){if(!ts)return '—';return new Date(ts).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'});}
 function renderAdminRooms(snap){
-  const data=snap.val()||{}; adminRoomsCache=data;
-  const rooms=Object.entries(data).filter(([code,v])=>v&&v.active && (!adminRoomSearchText || code.toLowerCase().includes(adminRoomSearchText))).sort((a,b)=>(b[1].lastActivity||0)-(a[1].lastActivity||0));
-  adminRoomCount.textContent=rooms.length;
-  adminUserCount.textContent=rooms.reduce((sum,[,v])=>sum+Math.max(0,Number(v.userCount)||0),0);
+  // This handler is attached to both active and archived refs.
+  const path = snap.ref && snap.ref.parent ? snap.ref.parent.key : '';
+  if(path === 'archivedRooms') adminArchivedCache = snap.val() || {};
+  else adminRoomsCache = snap.val() || {};
+
+  const activeRooms = Object.entries(adminRoomsCache)
+    .filter(([,v])=>v&&v.active)
+    .sort((a,b)=>(b[1].lastActivity||0)-(a[1].lastActivity||0));
+
+  const closedRooms = Object.entries(adminRoomsCache)
+    .filter(([,v])=>v && v.active === false)
+    .sort((a,b)=>(b[1].closedAt||b[1].lastActivity||0)-(a[1].closedAt||a[1].lastActivity||0));
+
+  const archivedRooms = Object.entries(adminArchivedCache)
+    .filter(([,v])=>v)
+    .sort((a,b)=>(b[1].closedAt||b[1].lastActivity||0)-(a[1].closedAt||a[1].lastActivity||0));
+
+  adminRoomCount.textContent = activeRooms.length;
+  adminArchiveCount.textContent = closedRooms.length + archivedRooms.length;
+  adminUserCount.textContent = activeRooms.reduce((sum,[,v])=>sum+Math.max(0,Number(v.userCount)||0),0);
   adminRoomsList.innerHTML='';
-  if(!rooms.length){adminEmptyNote.style.display='block';adminEmptyNote.textContent='No active rooms right now.';clearAdminMonitor();return;}
+
+  if(!activeRooms.length && !closedRooms.length && !archivedRooms.length){
+    adminEmptyNote.style.display='block';
+    adminEmptyNote.textContent='No active or archived rooms right now.';
+    clearAdminMonitor();
+    return;
+  }
+
   adminEmptyNote.style.display='none';
-  rooms.forEach(([code,meta])=>{
+
+  activeRooms.forEach(([code,meta])=>{
     const count=Math.max(0,Number(meta.userCount)||0);
-    const card=document.createElement('div'); card.className='admin-room-card'+(code===adminSelectedRoom?' selected':''); card.dataset.code=code;
+    const card=document.createElement('div');
+    card.className='admin-room-card'+(code===adminSelectedRoom?' selected':'');
+    card.dataset.code=code;
+    card.dataset.archived='false';
     card.innerHTML=`<div class="arc-left"><div class="arc-code">ROOM ${escapeHtml(code)}</div><div class="arc-meta">${count} ${count===1?'user':'users'} · Created ${fmtAdminTime(meta.createdAt)}<br>Last activity ${fmtAdminTime(meta.lastActivity)}</div></div><div class="arc-actions"><span class="arc-live">● LIVE</span><button class="arc-close-btn" type="button">Close</button></div>`;
-    card.addEventListener('click',e=>{if(e.target.closest('.arc-close-btn'))return;selectAdminRoom(code)});
+    card.addEventListener('click',e=>{if(e.target.closest('.arc-close-btn'))return;selectAdminRoom(code,false)});
     card.querySelector('.arc-close-btn').addEventListener('click',e=>{e.stopPropagation();closeRoomByCode(code)});
     adminRoomsList.appendChild(card);
   });
-  if(adminSelectedRoom && (!adminRoomsCache[adminSelectedRoom] || !adminRoomsCache[adminSelectedRoom].active)){clearAdminMonitor();}
+
+  closedRooms.forEach(([code,meta])=>{
+    const card=document.createElement('div');
+    card.className='admin-room-card'+(code===adminSelectedRoom?' selected':'');
+    card.dataset.code=code;
+    card.dataset.archived='false';
+    card.dataset.closed='true';
+    card.innerHTML=`<div class="arc-left"><div class="arc-code">CLOSED ${escapeHtml(code)}</div><div class="arc-meta">Chat preserved · Closed ${fmtAdminTime(meta.closedAt||meta.lastActivity)}</div></div><div class="arc-actions"><span style="font-size:8px;color:#fbbf24;font-weight:900;letter-spacing:.8px">● CLOSED</span></div>`;
+    card.addEventListener('click',()=>selectAdminRoom(code,false));
+    adminRoomsList.appendChild(card);
+  });
+
+  archivedRooms.forEach(([code,meta])=>{
+    const card=document.createElement('div');
+    card.className='admin-room-card'+(code===adminSelectedRoom?' selected':'');
+    card.dataset.code=code;
+    card.dataset.archived='true';
+    card.innerHTML=`<div class="arc-left"><div class="arc-code">ARCHIVE ${escapeHtml(code)}</div><div class="arc-meta">${Number(meta.messageCount)||0} messages · Closed ${fmtAdminTime(meta.closedAt||meta.lastActivity)}</div></div><div class="arc-actions"><span style="font-size:8px;color:#fbbf24;font-weight:900;letter-spacing:.8px">● ARCHIVED</span></div>`;
+    card.addEventListener('click',()=>selectAdminRoom(code,true));
+    adminRoomsList.appendChild(card);
+  });
+
+  if(adminSelectedRoom){
+    const exists = !!adminRoomsCache[adminSelectedRoom] || !!adminArchivedCache[adminSelectedRoom];
+    if(!exists) clearAdminMonitor();
+  }
 }
-function clearAdminMonitor(){stopAdminMonitor();adminSelectedRoom='';monitorRoomCode.textContent='—';monitorMeta.textContent='Select an active room from the left.';monitorUsers.innerHTML='';monitorMessages.innerHTML='<div class="monitor-empty">No room selected.<br>Choose an active room to begin monitoring.</div>';monitorCloseRoom.style.display='none';}
-function selectAdminRoom(code){
-  if(!isConfigured || !db || !adminRoomsCache[code] || !adminRoomsCache[code].active)return;
-  stopAdminMonitor(); adminSelectedRoom=code;
-  monitorRoomCode.textContent=code; monitorCloseRoom.style.display='inline-block';
-  const meta=adminRoomsCache[code]; monitorMeta.textContent=`${Math.max(0,Number(meta.userCount)||0)} online · Created ${fmtAdminTime(meta.createdAt)} · Last activity ${fmtAdminTime(meta.lastActivity)} · READ-ONLY`;
+
+function clearAdminMonitor(){stopAdminMonitor();adminSelectedRoom='';monitorRoomCode.textContent='—';monitorMeta.textContent='Select an active room from the left.';monitorUsers.innerHTML='';monitorMessages.innerHTML='<div class="monitor-empty">No room selected.<br>Choose an active room to begin monitoring.</div>';monitorCloseRoom.style.display='none';monitorExportPdf.style.display='none';}
+function selectAdminRoom(code,isArchived=false){
+  if(!adminUnlocked || !isConfigured || !db) return;
+
+  stopAdminMonitor();
+  adminSelectedRoom=code;
+
+  const meta = isArchived ? adminArchivedCache[code] : adminRoomsCache[code];
+  if(!meta) return;
+
+  monitorRoomCode.textContent=code;
+  monitorExportPdf.style.display='inline-block';
+  monitorCloseRoom.style.display=isArchived?'none':'inline-block';
+
+  if(isArchived){
+    monitorMeta.textContent=`${Number(meta.messageCount)||0} messages · Closed ${fmtAdminTime(meta.closedAt||meta.lastActivity)} · ARCHIVED · READ-ONLY`;
+    monitorUsers.innerHTML='<span class="monitor-user">Archived room</span>';
+    monitorMessages.innerHTML='';
+
+    const archivedMessagesRef=db.ref('archivedRooms/'+code+'/messages');
+    adminMessagesRef=archivedMessagesRef;
+    adminMessagesHandler=snap=>appendMonitorMessage(snap.key,snap.val());
+    archivedMessagesRef.orderByChild('timestamp').on('child_added',adminMessagesHandler);
+  } else {
+    monitorMeta.textContent=`${Math.max(0,Number(meta.userCount)||0)} online · Created ${fmtAdminTime(meta.createdAt)} · Last activity ${fmtAdminTime(meta.lastActivity)} · READ-ONLY`;
+    monitorMessages.innerHTML='';
+
+    const room=db.ref('rooms/'+code);
+    adminUsersRef=room.child('users');
+    adminMessagesRef=room.child('messages');
+    adminUsersHandler=snap=>renderMonitorUsers(snap.val());
+    adminUsersRef.on('value',adminUsersHandler);
+    adminMessagesHandler=snap=>appendMonitorMessage(snap.key,snap.val());
+    adminMessagesRef.orderByChild('timestamp').on('child_added',adminMessagesHandler);
+  }
+
   adminRoomsList.querySelectorAll('.admin-room-card').forEach(c=>c.classList.toggle('selected',c.dataset.code===code));
-  monitorMessages.innerHTML='';
-  const room=db.ref('rooms/'+code);
-  adminUsersRef=room.child('users');
-  adminMessagesRef=room.child('messages');
-  adminUsersHandler=snap=>renderMonitorUsers(snap.val());
-  adminUsersRef.on('value',adminUsersHandler);
-  adminMessagesHandler=snap=>appendMonitorMessage(snap.key,snap.val());
-  // Admin monitoring intentionally reads existing messages so safety staff can review the active room.
-  adminMessagesRef.orderByChild('timestamp').on('child_added',adminMessagesHandler);
 }
+
 function renderMonitorUsers(usersObj){
   const users=Object.values(usersObj||{}); monitorUsers.innerHTML='';
   if(!users.length){monitorUsers.innerHTML='<span class="monitor-user">No users currently connected</span>';return;}
@@ -804,21 +862,183 @@ function appendMonitorMessage(key,msg){
   const time=document.createElement('div');time.className='mm-time';time.textContent=fmtTime(msg.timestamp);
   row.append(name,text,time);monitorMessages.appendChild(row);monitorMessages.scrollTop=monitorMessages.scrollHeight;
 }
-function closeRoomByCode(code){
-  if(!confirm('Close room '+code+'? Participants will be disconnected and a PDF transcript will be generated and emailed after the server archives the chat.'))return;
-  db.ref('rooms/'+code+'/meta').update({
-    active:false,
-    closing:true,
-    closedAt:firebase.database.ServerValue.TIMESTAMP,
-    closedBy:'ADMIN'
-  }).then(()=>{
-    monitorMeta.textContent='Room closing — transcript is being archived and emailed as PDF…';
-    if(adminSelectedRoom===code){
-      monitorCloseRoom.disabled=true;
-      monitorCloseRoom.textContent='Closing…';
+async function closeRoomByCode(code){
+  if(!adminUnlocked || !db || !roomsIndexRef) return;
+
+  if(!confirm('Close room '+code+'? The complete chat will be archived first, then participants will be disconnected.')) return;
+
+  try{
+    const roomRefToArchive=db.ref('rooms/'+code);
+    const snapshot=await roomRefToArchive.once('value');
+    const roomData=snapshot.val();
+
+    if(!roomData){
+      await roomsIndexRef.child(code).remove();
+      return;
     }
-  }).catch(err=>alert('Unable to close room: '+err.message));
+
+    const messages=roomData.messages || {};
+    const messageCount=Object.keys(messages).length;
+    const closedAt=Date.now();
+
+    // Preserve the complete room before deleting the live room.
+    await db.ref('archivedRooms/'+code).set({
+      meta: Object.assign({}, roomData.meta || {}, {
+        active:false,
+        closedAt:closedAt,
+        messageCount:messageCount
+      }),
+      messages:messages,
+      closedAt:closedAt,
+      messageCount:messageCount
+    });
+
+    await roomRefToArchive.remove();
+    await roomsIndexRef.child(code).remove();
+
+    if(adminSelectedRoom===code) selectAdminRoom(code,true);
+
+  }catch(err){
+    console.error(err);
+    alert('Unable to archive/close room: '+err.message);
+  }
 }
+
+async function exportSelectedRoomPDF(){
+  if(!adminUnlocked){ alert('Administrator authentication required.'); return; }
+  if(!adminSelectedRoom){ alert('Please select a chat room first.'); return; }
+  if(!db){ alert('Firebase is not configured.'); return; }
+
+  const btn=monitorExportPdf;
+  try{
+    btn.disabled=true;
+    btn.textContent='Generating...';
+
+    let snapshot;
+    let archived=!!adminArchivedCache[adminSelectedRoom];
+
+    if(archived){
+      snapshot=await db.ref('archivedRooms/'+adminSelectedRoom+'/messages').orderByChild('timestamp').once('value');
+    }else{
+      snapshot=await db.ref('rooms/'+adminSelectedRoom+'/messages').orderByChild('timestamp').once('value');
+    }
+
+    const messages=[];
+    snapshot.forEach(child=>{
+      const msg=child.val();
+      if(msg) messages.push({
+        name:msg.name||'Unknown',
+        text:msg.text||'',
+        timestamp:Number(msg.timestamp)||0
+      });
+    });
+
+    messages.sort((a,b)=>a.timestamp-b.timestamp);
+
+    if(!messages.length){ alert('No messages found in this chat room.'); return; }
+    if(!window.jspdf || !window.jspdf.jsPDF){ alert('PDF library is not loaded. Check your internet connection.'); return; }
+
+    const {jsPDF}=window.jspdf;
+    const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const pageWidth=pdf.internal.pageSize.getWidth();
+    const pageHeight=pdf.internal.pageSize.getHeight();
+    const ml=15, mr=15, mt=20, mb=18;
+    const usableWidth=pageWidth-ml-mr;
+    let y=mt;
+
+    pdf.setFont('helvetica','bold');
+    pdf.setFontSize(18);
+    pdf.setTextColor(25,40,60);
+    pdf.text('BATLAR PRIVATE CHAT',ml,y);
+    y+=8;
+
+    pdf.setFont('helvetica','normal');
+    pdf.setFontSize(10);
+    pdf.setTextColor(70,80,90);
+    pdf.text('Chat Code: '+adminSelectedRoom,ml,y); y+=5;
+    pdf.text('Status: '+(archived?'ARCHIVED':'ACTIVE'),ml,y); y+=5;
+    pdf.text('Exported: '+formatPdfDateTime(new Date()),ml,y); y+=5;
+    pdf.text('Total Messages: '+messages.length,ml,y); y+=7;
+
+    pdf.setDrawColor(170,180,190);
+    pdf.line(ml,y,pageWidth-mr,y);
+    y+=8;
+
+    messages.forEach(msg=>{
+      const sender=msg.name||'Unknown';
+      const time=msg.timestamp?formatPdfDateTime(new Date(msg.timestamp)):'Unknown time';
+      const lines=pdf.splitTextToSize(msg.text||'',usableWidth);
+      const lineHeight=4.5;
+      const required=(lines.length*lineHeight)+13;
+
+      if(y+required>pageHeight-mb){
+        pdf.addPage();
+        y=mt;
+        pdf.setFont('helvetica','bold');
+        pdf.setFontSize(11);
+        pdf.setTextColor(25,40,60);
+        pdf.text('BATLAR PRIVATE CHAT — '+adminSelectedRoom,ml,y);
+        y+=9;
+      }
+
+      pdf.setFont('helvetica','bold');
+      pdf.setFontSize(10);
+      pdf.setTextColor(35,55,80);
+      pdf.text(sender+'  •  '+time,ml,y);
+      y+=5;
+
+      pdf.setFont('helvetica','normal');
+      pdf.setFontSize(10);
+      pdf.setTextColor(35,35,35);
+      pdf.text(lines,ml,y);
+      y+=lines.length*lineHeight+4;
+
+      pdf.setDrawColor(225,228,232);
+      pdf.line(ml,y,pageWidth-mr,y);
+      y+=5;
+    });
+
+    const totalPages=pdf.internal.getNumberOfPages();
+    for(let page=1;page<=totalPages;page++){
+      pdf.setPage(page);
+      pdf.setFont('helvetica','normal');
+      pdf.setFontSize(8);
+      pdf.setTextColor(120,120,120);
+      pdf.text('BATLAR Security Console • Confidential',ml,pageHeight-8);
+      pdf.text('Page '+page+' of '+totalPages,pageWidth-mr-25,pageHeight-8);
+    }
+
+    const fileName=adminSelectedRoom+'_'+formatPdfFileDateTime(new Date())+'.pdf';
+    pdf.save(fileName);
+  }catch(error){
+    console.error('PDF Export Error:',error);
+    alert('Unable to export chat PDF.\n\n'+error.message);
+  }finally{
+    btn.disabled=false;
+    btn.textContent='↓ Export PDF';
+  }
+}
+
+function formatPdfDateTime(date){
+  const day=String(date.getDate()).padStart(2,'0');
+  const month=date.toLocaleString('en-US',{month:'short'});
+  const year=date.getFullYear();
+  const hours=String(date.getHours()).padStart(2,'0');
+  const minutes=String(date.getMinutes()).padStart(2,'0');
+  const seconds=String(date.getSeconds()).padStart(2,'0');
+  return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+}
+
+function formatPdfFileDateTime(date){
+  const day=String(date.getDate()).padStart(2,'0');
+  const month=String(date.getMonth()+1).padStart(2,'0');
+  const year=date.getFullYear();
+  const hours=String(date.getHours()).padStart(2,'0');
+  const minutes=String(date.getMinutes()).padStart(2,'0');
+  const seconds=String(date.getSeconds()).padStart(2,'0');
+  return `${day}-${month}-${year}_${hours}-${minutes}-${seconds}`;
+}
+
 function closeMonitoredRoom(){if(adminSelectedRoom)closeRoomByCode(adminSelectedRoom)}
 
 </script>
