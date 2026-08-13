@@ -102,11 +102,111 @@ form#send-form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line
 .mention-empty{padding:14px 10px;color:var(--muted);font-size:11px;text-align:center}
 #typing-indicator{padding:3px 18px;font-size:11px;color:var(--muted);min-height:20px;display:flex;align-items:center;gap:6px;font-style:normal}.typing-dots{display:inline-flex;gap:3px}.typing-dots span{width:4px;height:4px;border-radius:50%;background:var(--accent);animation:typingBounce 1.2s infinite}.typing-dots span:nth-child(2){animation-delay:.15s}.typing-dots span:nth-child(3){animation-delay:.3s}@keyframes typingBounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-3px);opacity:1}}#typing-indicator.hidden{visibility:hidden}
 #qr-overlay,#admin-overlay{display:none;position:fixed;inset:0;background:rgba(32,33,36,.6);backdrop-filter:blur(3px);align-items:center;justify-content:center;z-index:50;padding:18px}.overlay-card{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}#qr-card{padding:26px;text-align:center;max-width:320px}#qr-card h3{margin:0 0 5px;font-size:18px;font-weight:500;font-family:'Google Sans Text',sans-serif}#qr-card p{color:var(--muted);font-size:11.5px;margin:0 0 17px}#qr-code-box{background:#fff;padding:12px;border:1px solid var(--line);border-radius:10px;display:inline-block}#qr-close{margin-top:16px;background:transparent;border:1px solid var(--line);color:var(--muted);padding:9px 20px;font-size:12px;border-radius:20px;font-weight:600}#qr-close:hover{background:var(--panel2)}
-/* ADMIN SECURITY CONSOLE */
-#admin-card{width:min(1180px,96vw);height:min(760px,92vh);background:var(--panel3);border:1px solid var(--line);border-radius:16px;box-shadow:0 8px 28px rgba(32,33,36,.28);overflow:hidden;display:flex;flex-direction:column;padding:0;max-width:none;max-height:none}.admin-topbar{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:#fff;border-bottom:1px solid var(--line)}.admin-brand{display:flex;align-items:center;gap:11px}.admin-logo{width:34px;height:34px;border-radius:50%;background:var(--accent);display:grid;place-items:center;color:#fff;font-weight:700;font-family:'Google Sans Text',sans-serif}.admin-brand strong{font-size:15px;font-weight:500;font-family:'Google Sans Text',sans-serif;color:var(--text)}.admin-brand small{display:block;color:var(--muted);font-size:9.5px;letter-spacing:.8px;margin-top:2px;font-weight:600}.admin-status{display:flex;align-items:center;gap:8px;font-size:10.5px;color:var(--live);font-weight:700;letter-spacing:.4px}.admin-body{display:flex;min-height:0;flex:1}.admin-sidebar{width:330px;border-right:1px solid var(--line);background:#fff;display:flex;flex-direction:column;min-width:280px}.admin-side-head{padding:16px;border-bottom:1px solid var(--line)}.admin-side-title{font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--text)}.admin-side-sub{font-size:10.5px;color:var(--muted);margin-top:4px}.admin-stats{display:flex;gap:7px;margin-top:12px}.stat{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px}.stat b{display:block;font-size:18px;color:var(--text);font-weight:700}.stat span{font-size:9px;color:var(--muted);text-transform:uppercase;font-weight:600}.admin-rooms{padding:10px;overflow-y:auto;flex:1}.admin-room-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:9px;transition:.15s;cursor:pointer}.admin-room-card:hover{border-color:var(--accent);box-shadow:var(--shadow)}.admin-room-card.selected{border-color:var(--accent);background:#e8f0fe;box-shadow:inset 3px 0 0 var(--accent)}.arc-left{min-width:0}.arc-code{font-size:14px;font-weight:700;letter-spacing:.6px;color:var(--text);font-family:'Google Sans Text',sans-serif}.arc-meta{font-size:9.5px;color:var(--muted);margin-top:4px;line-height:1.45}.arc-actions{display:flex;align-items:center;gap:6px}.arc-live{font-size:8.5px;color:var(--live);font-weight:700;letter-spacing:.5px}.arc-close-btn{background:transparent;border:1px solid #f6b3ac;color:var(--danger);font-size:10px;padding:6px 9px;border-radius:14px;font-weight:600}.arc-close-btn:hover{background:#fce8e6}.admin-empty{padding:30px 12px;text-align:center;color:var(--muted);font-size:11.5px}.admin-monitor{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--panel3)}.monitor-head{padding:16px 18px;border-bottom:1px solid var(--line);background:#fff}.monitor-title-row{display:flex;justify-content:space-between;align-items:center;gap:10px}.monitor-title{font-size:16px;font-weight:500;font-family:'Google Sans Text',sans-serif;color:var(--text)}.monitor-title span{color:var(--accent);letter-spacing:.6px}.monitor-meta{font-size:10.5px;color:var(--muted);margin-top:5px}.monitor-actions{display:flex;gap:7px}.monitor-btn{background:#fff;border:1px solid var(--line);color:var(--text);padding:8px 12px;font-size:10px;font-weight:600;border-radius:16px}.monitor-btn:hover{border-color:var(--accent);color:var(--accent);background:#e8f0fe}.monitor-btn.danger{border-color:#f6b3ac;color:var(--danger)}.monitor-btn.danger:hover{background:#fce8e6}.monitor-users{display:flex;gap:6px;flex-wrap:wrap;padding:9px 18px;border-bottom:1px solid var(--line);background:#fff;min-height:39px}.monitor-user{font-size:9.5px;color:var(--text);background:var(--panel2);border:1px solid var(--line);padding:4px 9px;border-radius:20px;font-weight:600}.monitor-messages{flex:1;overflow-y:auto;padding:18px}.monitor-message{display:grid;grid-template-columns:90px 1fr auto;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}.monitor-message:last-child{border-bottom:0}.mm-name{font-size:11px;font-weight:700;color:var(--accent2);overflow:hidden;text-overflow:ellipsis}.mm-text{font-size:12px;line-height:1.5;white-space:pre-wrap;word-break:break-word;color:var(--text)}.mm-time{font-size:9.5px;color:var(--muted);white-space:nowrap}.monitor-empty{height:100%;display:grid;place-items:center;color:var(--muted);font-size:11.5px;text-align:center;padding:30px}.admin-footer{padding:10px 16px;border-top:1px solid var(--line);background:#fff;display:flex;justify-content:space-between;align-items:center}.admin-footer-note{font-size:9px;color:var(--muted);font-weight:600;letter-spacing:.3px}#admin-close{background:transparent;border:1px solid var(--line);color:var(--text);padding:8px 16px;font-size:11px;font-weight:600;border-radius:16px}#admin-close:hover{border-color:var(--accent);color:var(--accent)}.pin-wrap{width:min(400px,94vw);background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px;box-shadow:var(--shadow)}.pin-wrap h3{margin:0 0 6px;font-size:19px;font-weight:500;font-family:'Google Sans Text',sans-serif;color:var(--text)}.pin-wrap p{color:var(--muted);font-size:12px;line-height:1.5;margin:0 0 16px}.pin-actions{display:flex;gap:8px}.pin-actions button{flex:1;padding:12px;border-radius:20px}.pin-primary{background:var(--accent);color:#fff;font-weight:600}.pin-primary:hover{background:var(--accent2)}.pin-cancel{background:transparent;border:1px solid var(--line);color:var(--muted)}.pin-cancel:hover{background:var(--panel2)}#admin-pin-error{color:var(--danger);font-size:11.5px;margin-top:8px;min-height:14px;font-weight:600;text-align:center}
-@media(max-width:800px){body{padding:0}.admin-body{flex-direction:column}.admin-sidebar{width:100%;height:42%;min-width:0;border-right:0;border-bottom:1px solid var(--line)}.admin-monitor{height:58%}.monitor-message{grid-template-columns:70px 1fr}.admin-topbar{height:56px;padding:0 13px}#admin-card{width:100vw;height:100vh;border-radius:0}.admin-side-head{padding:11px}.admin-rooms{display:flex;gap:7px;overflow-x:auto;overflow-y:hidden}.admin-room-card{min-width:210px;margin:0}.arc-close-btn{display:none}}
-@media(max-width:480px){#chat-screen{height:100vh;border-radius:0}#start-screen,#join-screen{border-radius:0;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:24px 20px}.monitor-title{font-size:14px}.monitor-message{grid-template-columns:1fr auto}.mm-name{grid-column:1}.mm-time{grid-column:2}.mm-text{grid-column:1 / -1}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* =========================================================
+   BATLAR ADMIN SECURITY CONSOLE — AUTHORITATIVE STYLES
+   ========================================================= */
+.eyebrow-dot{width:6px;height:6px;border-radius:50%;background:#6f7b86;display:inline-block;flex:0 0 6px}.admin-entry-link{font-size:9px;letter-spacing:.8px;color:#66727d;text-decoration:none;font-weight:700;cursor:pointer}.admin-entry-link:hover{color:var(--accent)}.eyebrow-separator{color:#9aa3ab;font-size:9px}
+#admin-overlay{display:none;position:fixed;inset:0;z-index:99999;align-items:center;justify-content:center;padding:24px;background:rgba(15,23,31,.72);backdrop-filter:blur(8px)}
+#admin-card{width:min(1200px,96vw);height:min(780px,92vh);position:relative;overflow:hidden;background:#0d1319;border:1px solid #27323d;border-radius:16px;box-shadow:0 28px 80px rgba(0,0,0,.55);color:#e7edf2}
+.admin-auth{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(430px,calc(100% - 40px));text-align:center}
+.auth-icon{width:62px;height:62px;margin:0 auto 18px;border:1px solid #33404c;border-radius:14px;background:#151d25;display:grid;place-items:center;color:#a9b5bf;font-weight:800;letter-spacing:1px;font-size:14px}
+.auth-label{font-size:9px;letter-spacing:2px;color:#7f8c98;font-weight:700;margin-bottom:9px}.admin-auth h2{margin:0;color:#eef2f5;font-size:23px;font-weight:600}.auth-description{max-width:390px;margin:11px auto 17px;color:#7c8995;font-size:11.5px;line-height:1.65}.auth-security{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;margin-bottom:20px;border:1px solid #26313b;border-radius:6px;background:#111820;color:#7f8b96;font-size:8px;letter-spacing:1px}.security-dot{width:6px;height:6px;border-radius:50%;background:#8d9aa5}.pin-label{display:block;text-align:left;margin-bottom:7px;color:#98a4ae;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase}.pin-input-wrap{position:relative}.admin-auth .code-input{width:100%;height:48px;box-sizing:border-box;background:#090e13;border:1px solid #303b46;border-radius:8px;color:#edf2f5;padding:0 14px;font-size:14px;letter-spacing:2px;outline:none}.admin-auth .code-input::placeholder{color:#4f5b66;letter-spacing:.5px}.admin-auth .code-input:focus{border-color:#657481;box-shadow:0 0 0 3px rgba(101,116,129,.12)}.admin-pin-error{min-height:18px;margin-top:7px;text-align:left;color:#d47d7d;font-size:10.5px}.pin-actions{display:flex;gap:9px;margin-top:7px}.pin-actions button{height:43px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer}.pin-cancel{width:110px;background:#151c23;border:1px solid #2b3640;color:#929da7}.pin-primary{flex:1;display:flex;align-items:center;justify-content:center;gap:10px;background:#2a3641;border:1px solid #3b4854;color:#f3f6f8}.pin-primary:hover{background:#34414d}.auth-footer{display:flex;justify-content:center;gap:7px;margin-top:19px;color:#4f5c67;font-size:7px;letter-spacing:1px}
+.admin-panel{width:100%;height:100%;display:flex;flex-direction:column;min-height:0}.admin-topbar{height:70px;flex:0 0 70px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:#10171e;border-bottom:1px solid #222d37}.admin-brand{display:flex;align-items:center;gap:11px}.admin-logo{width:38px;height:38px;border:1px solid #3a4652;border-radius:9px;background:#202b35;display:grid;place-items:center;color:#dbe2e7;font-size:11px;font-weight:800;letter-spacing:1px}.admin-brand-text{display:flex;flex-direction:column}.admin-brand-text strong{font-size:13px;letter-spacing:1px;color:#edf1f4}.admin-brand-text span{margin-top:3px;color:#65727e;font-size:7.5px;letter-spacing:1.5px}.admin-divider{width:1px;height:27px;background:#2b353f;margin:0 4px}.admin-console-name{font-size:9px;color:#9aa6b0;letter-spacing:1px}.admin-console-name small{display:block;margin-top:3px;color:#5f6c77;font-size:7px}.admin-session{display:flex;align-items:center;gap:9px;padding:7px 10px;border:1px solid #29343e;border-radius:7px;background:#111920}.session-indicator{width:7px;height:7px;border-radius:50%;background:#8b98a3}.admin-session strong{display:block;font-size:8px;letter-spacing:1px;color:#bac4cc}.admin-session small{display:block;margin-top:2px;color:#65717c;font-size:7px}
+.admin-body{display:flex;flex:1;min-height:0}.admin-sidebar{width:320px;flex:0 0 320px;display:flex;flex-direction:column;min-height:0;background:#0b1117;border-right:1px solid #222d37}.admin-side-head{padding:17px 16px 12px}.admin-side-title{font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#dce2e7}.admin-side-sub{margin-top:4px;color:#687581;font-size:9.5px;line-height:1.45}.admin-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 14px 13px}.stat{padding:9px 5px;text-align:center;background:#111820;border:1px solid #222d37;border-radius:7px}.stat-value{display:block;font-size:17px;font-weight:700;color:#dfe5ea}.stat-label{display:block;margin-top:3px;color:#616e79;font-size:6.5px;letter-spacing:.7px;font-weight:700}.room-list-header{height:33px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-top:1px solid #1d2730;border-bottom:1px solid #1d2730;color:#64717c;font-size:7.5px;font-weight:700;letter-spacing:1px}.live-indicator{display:flex;align-items:center;gap:5px;color:#77838d;font-size:7px}.live-indicator i{width:5px;height:5px;border-radius:50%;background:#89959e}.admin-rooms{flex:1;overflow-y:auto;padding:8px}.admin-rooms::-webkit-scrollbar,.monitor-messages::-webkit-scrollbar{width:5px}.admin-rooms::-webkit-scrollbar-thumb,.monitor-messages::-webkit-scrollbar-thumb{background:#2b3640;border-radius:8px}.admin-room-card{background:#111820;border:1px solid #242f39;border-radius:9px;padding:10px;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;transition:.15s}.admin-room-card:hover{border-color:#46535f;background:#151d25}.admin-room-card.selected{border-color:#60707e;background:#18212a;box-shadow:inset 3px 0 0 #84919c}.arc-left{min-width:0}.arc-code{font-size:12px;font-weight:700;letter-spacing:.7px;color:#e0e6eb}.arc-meta{margin-top:4px;font-size:8.5px;line-height:1.5;color:#697681}.arc-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}.arc-live{font-size:7.5px;color:#8b979f;font-weight:700;letter-spacing:.5px}.arc-close-btn{background:transparent;border:1px solid #4a3434;color:#bd8888;font-size:8px;padding:5px 7px;border-radius:12px;font-weight:700;cursor:pointer}.arc-close-btn:hover{background:#281b1b}.admin-empty{padding:30px 12px;text-align:center;color:#65727d;font-size:10px;line-height:1.5}.empty-icon{margin-bottom:8px;font-size:20px;color:#4f5b66}.admin-empty strong{display:block;color:#8a969f;font-size:10px}.admin-empty span{display:block;margin-top:4px}
+.admin-monitor{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;background:#0d1319}.monitor-head{min-height:82px;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:15px 18px;background:#10171e;border-bottom:1px solid #222d37}.monitor-kicker{margin-bottom:5px;color:#606d78;font-size:7px;letter-spacing:1.5px}.monitor-title{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:600;color:#e2e8ec}.monitor-title span:first-child{color:#aeb8c0;letter-spacing:.8px}.room-status-badge{padding:4px 7px;border:1px solid #303b45;border-radius:4px;color:#808d97;font-size:6.5px;letter-spacing:.8px}.monitor-meta{margin-top:5px;color:#687580;font-size:8.5px}.monitor-actions{display:flex;gap:6px;flex-shrink:0}.monitor-btn{height:33px;padding:0 10px;display:flex;align-items:center;gap:6px;background:#151d25;border:1px solid #2c3741;border-radius:6px;color:#9aa6b0;font-size:8.5px;font-weight:700;cursor:pointer}.monitor-btn:hover{background:#1c252e;color:#d2d8dd;border-color:#47545f}.monitor-btn.danger{color:#b07d7d;border-color:#4b3434}.monitor-btn.danger:hover{background:#291c1c}.btn-icon{font-size:12px;color:#7f8b96}.monitor-section{display:flex;flex-direction:column;min-height:0}.section-header{height:33px;flex:0 0 33px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid #1e2831;color:#64717c;font-size:7.5px;font-weight:700;letter-spacing:1px}.section-count{min-width:20px;padding:3px 6px;text-align:center;border-radius:4px;background:#182129;color:#8c98a2;font-size:7px}.read-only-badge{padding:3px 6px;border:1px solid #29343d;border-radius:4px;color:#65727d;font-size:6.5px}.monitor-users{min-height:55px;max-height:95px;overflow-y:auto;display:flex;gap:5px;flex-wrap:wrap;padding:8px 14px;background:#0e151b;border-bottom:1px solid #202a33}.monitor-user{padding:4px 8px;border:1px solid #29343e;border-radius:14px;background:#131b22;color:#a4afb8;font-size:8.5px;font-weight:600}.messages-section{flex:1;min-height:0}.monitor-messages{flex:1;min-height:0;overflow-y:auto;padding:12px 16px}.monitor-message{display:grid;grid-template-columns:95px minmax(0,1fr) auto;gap:10px;padding:9px 0;border-bottom:1px solid #202a33}.monitor-message:last-child{border-bottom:0}.mm-name{font-size:9px;font-weight:700;color:#9eabb5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mm-text{font-size:10px;line-height:1.5;white-space:pre-wrap;word-break:break-word;color:#d3d9de}.mm-time{font-size:7.5px;color:#64717c;white-space:nowrap}.monitor-empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;color:#5d6a75}.monitor-empty-icon{width:44px;height:44px;margin-bottom:9px;display:grid;place-items:center;border:1px solid #27323c;border-radius:50%;background:#111820;color:#66737e;font-size:18px}.monitor-empty strong{color:#818e98;font-size:10px}.monitor-empty span{max-width:270px;margin-top:5px;color:#596671;font-size:8.5px;line-height:1.5}.admin-footer{height:43px;flex:0 0 43px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:#0a0f14;border-top:1px solid #202a33}.admin-footer-note{display:flex;align-items:center;gap:6px;color:#596671;font-size:6.5px;letter-spacing:.8px}.footer-lock{color:#717d87;font-size:7px}.footer-separator{color:#3b4650}.admin-exit-btn{border:1px solid #29343e;background:#121920;color:#89959f;padding:7px 11px;border-radius:6px;font-size:8px;font-weight:700;cursor:pointer}.admin-exit-btn:hover{color:#d0d6db;border-color:#46525d}
+@media(max-width:800px){body{padding:0}#admin-card{width:100vw;height:100vh;border-radius:0}.admin-topbar{height:58px;flex-basis:58px;padding:0 12px}.admin-console-name,.admin-divider{display:none}.admin-sidebar{width:100%;flex-basis:auto;height:40%;border-right:0;border-bottom:1px solid #222d37}.admin-body{flex-direction:column}.admin-monitor{height:60%}.admin-rooms{display:flex;gap:7px;overflow-x:auto;overflow-y:hidden}.admin-room-card{min-width:220px;margin:0}.arc-close-btn{display:none}.monitor-head{padding:11px 12px;align-items:flex-start}.monitor-actions{gap:4px;flex-wrap:wrap;justify-content:flex-end}.monitor-btn{padding:0 8px}.admin-footer-note{display:none}.admin-footer{justify-content:flex-end}}
+@media(max-width:480px){.admin-brand-text span{display:none}.admin-session div{display:none}.admin-session{padding:8px}.admin-auth{width:calc(100% - 30px)}.monitor-title{font-size:13px}.monitor-message{grid-template-columns:1fr auto}.mm-name{grid-column:1}.mm-time{grid-column:2}.mm-text{grid-column:1/-1}}
+
+/* =========================================================
+   ADMIN CONSOLE — LIGHT THEME MATCHING MAIN BATLAR PAGE
+   ========================================================= */
+.admin-entry-link{width:12px!important;height:12px!important;display:inline-grid!important;place-items:center!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important;color:transparent!important;text-decoration:none!important;opacity:1!important}
+.admin-entry-link:hover{background:transparent!important;color:transparent!important}
+.admin-entry-dot{width:7px;height:7px;border-radius:50%;display:block;background:#1e8e3e;box-shadow:0 0 0 2px rgba(30,142,62,.12);transition:.18s}
+.admin-entry-link:hover .admin-entry-dot{transform:scale(1.22);box-shadow:0 0 0 3px rgba(30,142,62,.15)}
+#admin-overlay{background:rgba(32,33,36,.38)!important;backdrop-filter:blur(4px)!important}
+#admin-card{background:#fff!important;border:1px solid #dadce0!important;border-radius:20px!important;box-shadow:0 8px 30px rgba(60,64,67,.24)!important;color:#202124!important}
+.admin-auth{color:#202124!important}
+.auth-icon{border:1px solid #dadce0!important;background:#f8f9fa!important;color:#5f6368!important}
+.auth-label{color:#5f6368!important}
+.admin-auth h2{color:#202124!important}
+.auth-description{color:#5f6368!important}
+.auth-security{border:1px solid #dadce0!important;background:#f8f9fa!important;color:#5f6368!important}
+.security-dot{background:#1e8e3e!important}
+.pin-label{color:#5f6368!important}
+.admin-auth .code-input{background:#fff!important;border:1px solid #dadce0!important;color:#202124!important}
+.admin-auth .code-input::placeholder{color:#9aa0a6!important}
+.admin-auth .code-input:focus{border-color:#1a73e8!important;box-shadow:0 0 0 3px rgba(26,115,232,.12)!important}
+.admin-pin-error{color:#d93025!important}
+.pin-cancel{background:#fff!important;border:1px solid #dadce0!important;color:#5f6368!important}
+.pin-cancel:hover{background:#f8f9fa!important}
+.pin-primary{background:#1a73e8!important;border:1px solid #1a73e8!important;color:#fff!important}
+.pin-primary:hover{background:#1765cc!important}
+.auth-footer{color:#80868b!important}
+.admin-topbar{background:#fff!important;border-bottom:1px solid #dadce0!important}
+.admin-logo{border:1px solid #c8d0d7!important;background:#f1f3f4!important;color:#1a73e8!important}
+.admin-brand-text strong{color:#202124!important}
+.admin-brand-text span{color:#5f6368!important}
+.admin-divider{background:#dadce0!important}
+.admin-console-name{color:#5f6368!important}
+.admin-console-name small{color:#80868b!important}
+.admin-session{border:1px solid #dadce0!important;background:#f8f9fa!important}
+.session-indicator{background:#1e8e3e!important;box-shadow:0 0 0 2px rgba(30,142,62,.12)}
+.admin-session strong{color:#3c4043!important}
+.admin-session small{color:#5f6368!important}
+.admin-sidebar{background:#f8f9fa!important;border-right:1px solid #dadce0!important}
+.admin-side-title{color:#202124!important}
+.admin-side-sub{color:#5f6368!important}
+.stat{background:#fff!important;border:1px solid #dadce0!important}
+.stat-value{color:#202124!important}
+.stat-label{color:#5f6368!important}
+.room-list-header{border-top:1px solid #dadce0!important;border-bottom:1px solid #dadce0!important;color:#5f6368!important}
+.live-indicator{color:#1e8e3e!important}
+.live-indicator i{background:#1e8e3e!important}
+.admin-room-card{background:#fff!important;border:1px solid #dadce0!important}
+.admin-room-card:hover{border-color:#b8c4ce!important;background:#f8f9fa!important}
+.admin-room-card.selected{border-color:#8ab4f8!important;background:#e8f0fe!important;box-shadow:inset 3px 0 0 #1a73e8!important}
+.arc-code{color:#202124!important}
+.arc-meta{color:#5f6368!important}
+.arc-live{color:#1e8e3e!important}
+.arc-close-btn{border-color:#f1c7c4!important;color:#d93025!important;background:#fff!important}
+.arc-close-btn:hover{background:#fce8e6!important}
+.admin-empty{color:#5f6368!important}
+.empty-icon{color:#9aa0a6!important}
+.admin-empty strong{color:#3c4043!important}
+.admin-monitor{background:#fff!important}
+.monitor-head{background:#fff!important;border-bottom:1px solid #dadce0!important}
+.monitor-kicker{color:#5f6368!important}
+.monitor-title{color:#202124!important}
+.monitor-title span:first-child{color:#202124!important}
+.room-status-badge{border-color:#dadce0!important;color:#1e8e3e!important;background:#e6f4ea!important}
+.monitor-meta{color:#5f6368!important}
+.monitor-btn{background:#fff!important;border:1px solid #dadce0!important;color:#5f6368!important}
+.monitor-btn:hover{background:#f8f9fa!important;color:#202124!important;border-color:#b8c4ce!important}
+.monitor-btn.danger{color:#d93025!important;border-color:#f1c7c4!important}
+.monitor-btn.danger:hover{background:#fce8e6!important}
+.btn-icon{color:#5f6368!important}
+.section-header{border-bottom:1px solid #dadce0!important;color:#5f6368!important}
+.section-count{background:#f1f3f4!important;color:#5f6368!important}
+.read-only-badge{border-color:#dadce0!important;color:#5f6368!important;background:#f8f9fa!important}
+.monitor-users{background:#f8f9fa!important;border-bottom:1px solid #dadce0!important}
+.monitor-user{border-color:#dadce0!important;background:#fff!important;color:#3c4043!important}
+.monitor-message{border-bottom:1px solid #f1f3f4!important}
+.mm-name{color:#3c4043!important}
+.mm-text{color:#202124!important}
+.mm-time{color:#5f6368!important}
+.monitor-empty{color:#5f6368!important}
+.monitor-empty-icon{border-color:#dadce0!important;background:#f8f9fa!important;color:#9aa0a6!important}
+.monitor-empty strong{color:#3c4043!important}
+.monitor-empty span{color:#5f6368!important}
+.admin-footer{background:#f8f9fa!important;border-top:1px solid #dadce0!important}
+.admin-footer-note{color:#5f6368!important}
+.footer-lock{color:#1e8e3e!important}
+.footer-separator{color:#9aa0a6!important}
+.admin-exit-btn{border:1px solid #dadce0!important;background:#fff!important;color:#5f6368!important}
+.admin-exit-btn:hover{color:#202124!important;border-color:#b8c4ce!important;background:#f8f9fa!important}
+@media(max-width:800px){.admin-sidebar{border-bottom:1px solid #dadce0!important}.admin-topbar{border-bottom:1px solid #dadce0!important}}
+
 </style>
 </head>
 <body>
@@ -124,8 +224,13 @@ form#send-form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line
 <!-- ================= START SCREEN (create or join a room) ================= -->
 <div id="start-screen">
   <div class="brand-mark">BT</div>
-  <div class="eyebrow"><span class="dot"></span> SECURE PRIVATE CHAT</div>
-  <h1>BATLAR Private Chat</h1>
+  <div class="eyebrow d-flex align-items-center">
+    <span class="eyebrow-dot"></span>
+    <a class="admin-entry-link" id="admin-link" href="javascript:void(0);" aria-label="Open administrator console" title="Administrator Console"><span class="admin-entry-dot"></span></a>
+    <span class="eyebrow-separator">•</span>
+    <span>SECURE PRIVATE CHAT</span>
+  </div>
+	<h1>Private Chat</h1>
   <p class="sub">Create a private room or join an existing room using a secure 5-digit access code.</p>
 
   <button class="choice-btn" id="create-room-btn">
@@ -151,7 +256,6 @@ form#send-form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line
     <button id="code-continue-btn" style="width:100%; margin-top:14px; padding:13px; background:var(--accent); color:#fff; font-weight:600; font-size:14px; border-radius:24px; box-shadow:0 1px 3px rgba(26,115,232,.4);">Continue</button>
   </div>
 
-  <a class="back-link" id="admin-link" style="margin-top:22px; opacity:0.8; font-size:10.5px; letter-spacing:.6px;">ADMIN · SECURITY CONSOLE</a>
 </div>
 
 <!-- ================= JOIN SCREEN ================= -->
@@ -219,53 +323,386 @@ form#send-form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line
 </div>
 
 <!-- ================= ADMIN SECURITY CONSOLE ================= -->
-<div id="admin-overlay">
-  <div id="admin-card">
-    <div id="admin-pin-box" class="pin-wrap">
-      <h3>Administrator Authentication</h3>
-      <p>Authorized moderation access. The monitoring console is read-only: it does not create a participant presence, send messages, or publish typing status.</p>
-      <input type="password" class="code-input" id="admin-pin-input" maxlength="12" placeholder="ADMIN PIN" autocomplete="off" />
-      <div id="admin-pin-error"></div>
-      <div class="pin-actions">
-        <button id="admin-close-pin" class="pin-cancel">Cancel</button>
-        <button id="admin-pin-continue" class="pin-primary">Authenticate</button>
-      </div>
-    </div>
+<div id="admin-overlay" class="admin-overlay">
 
-    <div id="admin-panel-box" style="display:none;height:100%;flex-direction:column;min-height:0;">
-      <div class="admin-topbar">
-        <div class="admin-brand">
-          <div class="admin-logo">BT</div>
-          <div><strong>BATLAR Security Console</strong><small>ROOM MODERATION &amp; SAFETY MONITOR</small></div>
-        </div>
-        <div class="admin-status"><span class="dot" style="animation:none"></span> ADMIN SESSION ACTIVE</div>
-      </div>
-      <div class="admin-body">
-        <aside class="admin-sidebar">
-          <div class="admin-side-head">
-            <div class="admin-side-title">Active Chat Rooms</div>
-            <div class="admin-side-sub">Select a room to open its live read-only monitor.</div>
-            <div class="admin-stats"><div class="stat"><b id="admin-room-count">0</b><span>Rooms</span></div><div class="stat"><b id="admin-user-count">0</b><span>Users</span></div><div class="stat"><b id="admin-archive-count">0</b><span>Archived</span></div></div>
-          </div>
-          <div id="admin-rooms-list" class="admin-rooms"></div>
-          <div id="admin-empty-note" class="admin-empty" style="display:none">No active rooms right now.</div>
-        </aside>
-        <section class="admin-monitor">
-          <div class="monitor-head">
-            <div class="monitor-title-row">
-              <div><div class="monitor-title">Live Monitor <span id="monitor-room-code">—</span></div><div class="monitor-meta" id="monitor-meta">Select an active room from the left.</div></div>
-              <div class="monitor-actions"><button id="monitor-refresh" class="monitor-btn">Refresh</button><button id="monitor-export-pdf" class="monitor-btn" style="display:none">↓ Export PDF</button><button id="monitor-close-room" class="monitor-btn danger" style="display:none">Close Room</button></div>
+    <div id="admin-card" class="admin-card">
+
+        <!-- =========================
+             ADMIN PIN AUTHENTICATION
+        ========================== -->
+        <div id="admin-pin-box" class="admin-auth">
+
+            <div class="auth-icon">
+                <span>⌁</span>
             </div>
-          </div>
-          <div id="monitor-users" class="monitor-users"></div>
-          <div id="monitor-messages" class="monitor-messages"><div class="monitor-empty">No room selected.<br>Choose an active room to begin monitoring.</div></div>
-        </section>
-      </div>
-      <div class="admin-footer"><div class="admin-footer-note">READ-ONLY MODERATION MODE · ADMIN DOES NOT JOIN THE ROOM</div><button id="admin-close">Exit Console</button></div>
-    </div>
-  </div>
-</div>
 
+            <div class="auth-label">BATLAR SECURITY</div>
+
+            <h2>Administrator Authentication</h2>
+
+            <p class="auth-description">
+                Restricted administrative access.
+                This console operates in read-only monitoring mode
+                and does not create participant presence.
+            </p>
+
+            <div class="auth-security">
+                <span class="security-dot"></span>
+                <span>SECURE MODERATION CHANNEL</span>
+            </div>
+
+            <label for="admin-pin-input" class="pin-label">
+                Administrator PIN
+            </label>
+
+            <div class="pin-input-wrap">
+                <input type="password"
+                       class="code-input"
+                       id="admin-pin-input"
+                       maxlength="12"
+                       placeholder="Enter administrator PIN"
+                       autocomplete="off" />
+            </div>
+
+            <div id="admin-pin-error" class="admin-pin-error"></div>
+
+            <div class="pin-actions">
+                <button id="admin-close-pin" class="pin-cancel">
+                    Cancel
+                </button>
+
+                <button id="admin-pin-continue" class="pin-primary">
+                    <span>Authenticate</span>
+                    <span class="btn-arrow">→</span>
+                </button>
+            </div>
+
+            <div class="auth-footer">
+                <span>AUTHORIZED PERSONNEL ONLY</span>
+                <span>•</span>
+                <span>READ-ONLY ACCESS</span>
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             ADMIN SECURITY CONSOLE
+        ========================== -->
+        <div id="admin-panel-box"
+             class="admin-panel"
+             style="display:none;">
+
+            <!-- TOP BAR -->
+            <header class="admin-topbar">
+
+                <div class="admin-brand">
+
+                    <div class="admin-logo">
+                        BT
+                    </div>
+
+                    <div class="admin-brand-text">
+                        <strong>BATLAR</strong>
+                        <span>SECURITY CONSOLE</span>
+                    </div>
+
+                    <div class="admin-divider"></div>
+
+                    <div class="admin-console-name">
+                        ROOM MODERATION
+                        <small>SAFETY MONITOR</small>
+                    </div>
+
+                </div>
+
+                <div class="admin-session">
+
+                    <span class="session-indicator"></span>
+
+                    <div>
+                        <strong>ADMIN SESSION</strong>
+                        <small>ACTIVE · READ ONLY</small>
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- MAIN BODY -->
+            <div class="admin-body">
+
+                <!-- =====================
+                     SIDEBAR
+                ====================== -->
+                <aside class="admin-sidebar">
+
+                    <div class="admin-side-head">
+
+                        <div class="admin-side-title">
+                            Active Chat Rooms
+                        </div>
+
+                        <div class="admin-side-sub">
+                            Select a room to open its
+                            live monitoring console.
+                        </div>
+
+                    </div>
+
+
+                    <!-- STATS -->
+                    <div class="admin-stats">
+
+                        <div class="stat">
+                            <span class="stat-value"
+                                  id="admin-room-count">
+                                0
+                            </span>
+
+                            <span class="stat-label">
+                                ACTIVE ROOMS
+                            </span>
+                        </div>
+
+                        <div class="stat">
+                            <span class="stat-value"
+                                  id="admin-user-count">
+                                0
+                            </span>
+
+                            <span class="stat-label">
+                                USERS
+                            </span>
+                        </div>
+
+                        <div class="stat">
+                            <span class="stat-value"
+                                  id="admin-archive-count">
+                                0
+                            </span>
+
+                            <span class="stat-label">
+                                ARCHIVED
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <!-- ROOM LIST HEADER -->
+                    <div class="room-list-header">
+                        <span>LIVE ROOMS</span>
+
+                        <span class="live-indicator">
+                            <i></i> LIVE
+                        </span>
+                    </div>
+
+
+                    <!-- ROOMS -->
+                    <div id="admin-rooms-list"
+                         class="admin-rooms">
+                    </div>
+
+
+                    <!-- EMPTY STATE -->
+                    <div id="admin-empty-note"
+                         class="admin-empty"
+                         style="display:none;">
+
+                        <div class="empty-icon">
+                            —
+                        </div>
+
+                        <strong>No Active Rooms</strong>
+
+                        <span>
+                            There are currently no active
+                            chat rooms to monitor.
+                        </span>
+
+                    </div>
+
+                </aside>
+
+
+                <!-- =====================
+                     MONITOR
+                ====================== -->
+                <section class="admin-monitor">
+
+                    <!-- MONITOR HEADER -->
+                    <div class="monitor-head">
+
+                        <div class="monitor-title-area">
+
+                            <div class="monitor-kicker">
+                                LIVE MONITOR
+                            </div>
+
+                            <div class="monitor-title-row">
+
+                                <div class="monitor-title">
+                                    <span id="monitor-room-code">
+                                        —
+                                    </span>
+
+                                    <span class="room-status-badge">
+                                        MONITORING
+                                    </span>
+                                </div>
+
+                            </div>
+
+                            <div id="monitor-meta"
+                                 class="monitor-meta">
+                                Select an active room from the
+                                left panel to begin monitoring.
+                            </div>
+
+                        </div>
+
+
+                        <!-- ACTIONS -->
+                        <div class="monitor-actions">
+
+                            <button id="monitor-refresh"
+                                    class="monitor-btn">
+
+                                <span class="btn-icon">↻</span>
+                                Refresh
+
+                            </button>
+
+
+                            <button id="monitor-export-pdf"
+                                    class="monitor-btn"
+                                    style="display:none;">
+
+                                <span class="btn-icon">↓</span>
+                                Export PDF
+
+                            </button>
+
+
+                            <button id="monitor-close-room"
+                                    class="monitor-btn danger"
+                                    style="display:none;">
+
+                                <span class="btn-icon">×</span>
+                                Close Room
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- USER PRESENCE -->
+                    <div class="monitor-section">
+
+                        <div class="section-header">
+
+                            <span>
+                                PARTICIPANTS
+                            </span>
+
+                            <span id="monitor-user-count"
+                                  class="section-count">
+                                0
+                            </span>
+
+                        </div>
+
+                        <div id="monitor-users"
+                             class="monitor-users">
+                        </div>
+
+                    </div>
+
+
+                    <!-- MESSAGES -->
+                    <div class="monitor-section messages-section">
+
+                        <div class="section-header">
+
+                            <span>
+                                CHAT ACTIVITY
+                            </span>
+
+                            <span class="read-only-badge">
+                                READ ONLY
+                            </span>
+
+                        </div>
+
+                        <div id="monitor-messages"
+                             class="monitor-messages">
+
+                            <div class="monitor-empty">
+
+                                <div class="monitor-empty-icon">
+                                    ◌
+                                </div>
+
+                                <strong>
+                                    No Room Selected
+                                </strong>
+
+                                <span>
+                                    Choose an active room from
+                                    the left panel to begin
+                                    monitoring.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+
+            <!-- FOOTER -->
+            <footer class="admin-footer">
+
+                <div class="admin-footer-note">
+
+                    <span class="footer-lock">◆</span>
+
+                    <span>
+                        READ-ONLY MODERATION MODE
+                    </span>
+
+                    <span class="footer-separator">•</span>
+
+                    <span>
+                        ADMIN DOES NOT JOIN THE ROOM
+                    </span>
+
+                </div>
+
+                <button id="admin-close"
+                        class="admin-exit-btn">
+
+                    Exit Console
+                    <span>→</span>
+
+                </button>
+
+            </footer>
+
+        </div>
+
+    </div>
+
+</div>
 <script>
 /* =========================================================================
    1) FIREBASE CONFIG — REQUIRED
@@ -993,6 +1430,7 @@ const adminArchiveCount = document.getElementById('admin-archive-count');
 const monitorRoomCode = document.getElementById('monitor-room-code');
 const monitorMeta = document.getElementById('monitor-meta');
 const monitorUsers = document.getElementById('monitor-users');
+const monitorUserCount = document.getElementById('monitor-user-count');
 const monitorMessages = document.getElementById('monitor-messages');
 const monitorRefresh = document.getElementById('monitor-refresh');
 const monitorCloseRoom = document.getElementById('monitor-close-room');
@@ -1022,13 +1460,15 @@ function closeAdminOverlay(){
   if(archivedRoomsRef) archivedRoomsRef.off('value',renderAdminRooms);
   adminOverlay.style.display='none';
   adminSelectedRoom='';
+  adminPinError.textContent='';
 }
 adminLink.addEventListener('click',openAdminOverlay);
 adminCloseIcon.addEventListener('click',closeAdminOverlay);
 adminClose.addEventListener('click',closeAdminOverlay);
 adminOverlay.addEventListener('click',e=>{if(e.target===adminOverlay)closeAdminOverlay()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape' && adminOverlay.style.display==='flex')closeAdminOverlay();});
 adminPinContinue.addEventListener('click',()=>{
-  if(adminPinInput.value===ADMIN_PIN){ adminUnlocked=true; adminPinError.textContent=''; showAdminPanel(); }
+  if(adminPinInput.value.trim()===ADMIN_PIN){ adminUnlocked=true; adminPinError.textContent=''; showAdminPanel(); }
   else adminPinError.textContent='Incorrect administrator PIN.';
 });
 adminPinInput.addEventListener('keydown',e=>{if(e.key==='Enter')adminPinContinue.click()});
@@ -1040,12 +1480,14 @@ function showAdminPanel(){
   adminPinBox.style.display='none'; adminPanelBox.style.display='flex';
   if(!isConfigured || !roomsIndexRef){adminRoomsList.innerHTML='';adminEmptyNote.style.display='block';adminEmptyNote.textContent='Firebase is not configured.';return;}
   roomsIndexRef.off('value',renderAdminRooms);
+  archivedRoomsRef.off('value',renderAdminRooms);
   roomsIndexRef.on('value',renderAdminRooms);
+  archivedRoomsRef.on('value',renderAdminRooms);
 }
 function fmtAdminTime(ts){if(!ts)return '—';return new Date(ts).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'});}
 function renderAdminRooms(snap){
   // This handler is attached to both active and archived refs.
-  const path = snap.ref && snap.ref.parent ? snap.ref.parent.key : '';
+  const path = snap.ref ? snap.ref.key : '';
   if(path === 'archivedRooms') adminArchivedCache = snap.val() || {};
   else adminRoomsCache = snap.val() || {};
 
@@ -1114,7 +1556,7 @@ function renderAdminRooms(snap){
   }
 }
 
-function clearAdminMonitor(){stopAdminMonitor();adminSelectedRoom='';monitorRoomCode.textContent='—';monitorMeta.textContent='Select an active room from the left.';monitorUsers.innerHTML='';monitorMessages.innerHTML='<div class="monitor-empty">No room selected.<br>Choose an active room to begin monitoring.</div>';monitorCloseRoom.style.display='none';monitorExportPdf.style.display='none';}
+function clearAdminMonitor(){stopAdminMonitor();adminSelectedRoom='';monitorRoomCode.textContent='—';monitorMeta.textContent='Select an active room from the left.';monitorUsers.innerHTML='';if(monitorUserCount) monitorUserCount.textContent='0';monitorMessages.innerHTML='<div class="monitor-empty">No room selected.<br>Choose an active room to begin monitoring.</div>';monitorCloseRoom.style.display='none';monitorExportPdf.style.display='none';}
 function selectAdminRoom(code,isArchived=false){
   if(!adminUnlocked || !isConfigured || !db) return;
 
@@ -1130,7 +1572,7 @@ function selectAdminRoom(code,isArchived=false){
 
   if(isArchived){
     monitorMeta.textContent=`${Number(meta.messageCount)||0} messages · Closed ${fmtAdminTime(meta.closedAt||meta.lastActivity)} · ARCHIVED · READ-ONLY`;
-    monitorUsers.innerHTML='<span class="monitor-user">Archived room</span>';
+    monitorUsers.innerHTML='<span class="monitor-user">Archived room</span>'; if(monitorUserCount) monitorUserCount.textContent='—';
     monitorMessages.innerHTML='';
 
     const archivedMessagesRef=db.ref('archivedRooms/'+code+'/messages');
@@ -1154,7 +1596,7 @@ function selectAdminRoom(code,isArchived=false){
 }
 
 function renderMonitorUsers(usersObj){
-  const users=Object.values(usersObj||{}); monitorUsers.innerHTML='';
+  const users=Object.values(usersObj||{}); monitorUsers.innerHTML=''; if(monitorUserCount) monitorUserCount.textContent=users.length;
   if(!users.length){monitorUsers.innerHTML='<span class="monitor-user">No users currently connected</span>';return;}
   users.forEach(u=>{const el=document.createElement('span');el.className='monitor-user';el.textContent='● '+(u.name||'Unknown');monitorUsers.appendChild(el)});
 }
