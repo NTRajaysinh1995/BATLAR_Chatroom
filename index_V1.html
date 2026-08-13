@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BATLAR // Private Chat Room</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Firebase (compat SDK, easiest to configure) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+<!-- QR code generator -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<!-- PDF export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+:root{
+  --bg:#0b1220; --bg2:#101a2e; --panel:#111c2f; --panel2:#16243a;
+  --panel3:#0f192a; --line:#263650; --accent:#4da3ff; --accent2:#2563eb;
+  --accent-dim:#7dbdff; --live:#22c55e; --text:#e8eef7; --muted:#8ea0b9;
+  --danger:#ef4444; --warning:#f59e0b; --white:#fff;
+  --font-body:'Inter','Segoe UI',Arial,sans-serif;
+  --shadow:0 20px 60px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:radial-gradient(circle at 15% 0%,#16243d 0,transparent 35%),linear-gradient(135deg,var(--bg),var(--bg2));color:var(--text);font-family:var(--font-body);font-weight:500;display:flex;align-items:center;justify-content:center;padding:20px;min-height:100vh;overflow:hidden}
+button,input{font:inherit}button{cursor:pointer;border:0;border-radius:8px}button:disabled{opacity:.5;cursor:not-allowed}
+::selection{background:var(--accent);color:#fff}
+#heart-field,.lovebirds-hero{display:none!important}.brand-mark{width:42px;height:42px;margin:0 auto 14px;border-radius:10px;background:linear-gradient(135deg,#2563eb,#4da3ff);display:grid;place-items:center;color:#fff;font-weight:900;letter-spacing:1px}
+#join-screen,#start-screen,#chat-screen,#setup-warning{position:relative;z-index:1}
+#start-screen,#join-screen{width:100%;max-width:440px;background:rgba(17,28,47,.96);border:1px solid var(--line);border-radius:16px;padding:32px;box-shadow:var(--shadow)}
+.eyebrow{font-size:11px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px}.dot{width:7px;height:7px;border-radius:50%;background:var(--live);box-shadow:0 0 8px rgba(34,197,94,.7);animation:pulse 1.6s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+h1{font-family:var(--font-body);font-size:28px;font-weight:800;margin:0 0 8px;text-align:center;color:var(--text);letter-spacing:-.4px}#join-screen p.sub,#start-screen p.sub{color:var(--muted);font-size:13px;line-height:1.6;margin:0 0 24px;text-align:center}
+label{display:block;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:8px}input[type=text]{width:100%;background:#0c1626;border:1px solid var(--line);border-radius:9px;padding:12px 13px;color:var(--text);font-weight:600;font-size:14px;outline:none}input[type=text]:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(77,163,255,.12)}
+.choice-btn{width:100%;display:flex;align-items:center;justify-content:space-between;background:#152238;border:1px solid var(--line);border-radius:10px;padding:15px 16px;margin-bottom:10px;color:var(--text);text-align:left;transition:.15s}.choice-btn:hover{border-color:var(--accent);transform:translateY(-1px)}.choice-btn .cb-title{font-weight:800;font-size:14px;margin-bottom:3px}.choice-btn .cb-sub{font-size:11px;color:var(--muted);font-weight:600}.choice-btn .cb-arrow{color:var(--accent);font-size:18px}
+#join-btn,#code-continue-btn{width:100%;margin-top:16px;padding:13px;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;font-weight:800;font-size:14px;box-shadow:0 8px 20px rgba(37,99,235,.25)}
+#join-error,#code-error{color:#f87171;font-size:12px;margin-top:8px;min-height:14px;text-align:center;font-weight:600}.back-link{display:block;margin-top:16px;font-size:11px;color:var(--muted);cursor:pointer;text-decoration:underline;text-align:center;font-weight:600}.back-link:hover{color:var(--accent)}
+#join-code-box{display:none;margin-top:8px}.code-input{width:100%;background:#0c1626;border:1px solid var(--line);border-radius:9px;padding:12px;color:var(--accent);font-weight:800;font-size:21px;letter-spacing:7px;text-align:center;outline:none}#room-code-display{display:none;background:#0d192b;border:1px dashed var(--accent);border-radius:10px;padding:15px;text-align:center;margin:4px 0 24px}.rcd-label{font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;font-weight:800}.rcd-code{font-size:34px;font-weight:900;color:var(--accent);letter-spacing:6px}.rcd-hint{font-size:10px;color:var(--muted);margin-top:7px}
+#admin-link{display:block;text-align:center;margin-top:20px;font-size:10px;letter-spacing:1.5px;color:var(--muted);opacity:.7;cursor:pointer;text-decoration:none;font-weight:800}#admin-link:hover{opacity:1;color:var(--accent)}
+#setup-warning{display:none;max-width:480px;background:#241b0b;border:1px solid #755315;color:#f6c453;border-radius:10px;padding:15px 17px;font-size:12px;line-height:1.6;margin-bottom:16px;font-weight:600}
+#chat-screen{display:none;width:100%;max-width:720px;height:84vh;max-height:760px;background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;flex-direction:column;box-shadow:var(--shadow)}
+header.bar{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);background:#101b2e}.title{font-weight:800;font-size:15px;display:flex;align-items:center;gap:9px}.title small{font-weight:600;color:var(--muted);font-size:10px}#qr-btn{background:#17263d;border:1px solid var(--line);color:var(--muted);font-size:10px;letter-spacing:1px;padding:7px 11px;font-weight:800}#qr-btn:hover{border-color:var(--accent);color:var(--accent)}
+#online-strip{display:flex;gap:6px;flex-wrap:wrap;padding:9px 18px;background:#0f192a;border-bottom:1px solid var(--line);font-size:10px;color:var(--muted)}.badge{display:flex;align-items:center;gap:5px;background:#152238;border:1px solid var(--line);padding:3px 8px;border-radius:99px;font-weight:700}.badge .dot{width:5px;height:5px;box-shadow:none}
+#messages{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:13px;background:#0b1423}#messages::-webkit-scrollbar,#admin-rooms-list::-webkit-scrollbar,#monitor-messages::-webkit-scrollbar{width:7px}#messages::-webkit-scrollbar-thumb,#admin-rooms-list::-webkit-scrollbar-thumb,#monitor-messages::-webkit-scrollbar-thumb{background:#33445f;border-radius:5px}.entry{display:flex;gap:10px}.entry .rail{width:3px;border-radius:2px;background:#64748b;flex-shrink:0}.entry.me .rail{background:var(--accent)}.entry .body{flex:1;min-width:0}.entry .meta{display:flex;gap:9px;align-items:baseline;margin-bottom:3px}.entry .name{font-weight:800;font-size:13px;color:#a8cfff}.entry.me .name{color:var(--accent)}.entry .time{font-size:10px;color:var(--muted)}.entry .text{font-size:13.5px;line-height:1.5;word-wrap:break-word;white-space:pre-wrap}.system-line{text-align:center;font-size:10px;color:var(--muted);margin:3px 0;font-weight:600}#join-marker{text-align:center;font-size:10px;color:var(--accent);letter-spacing:1px;text-transform:uppercase;padding:8px 0;border-top:1px dashed var(--line);border-bottom:1px dashed var(--line);margin-bottom:3px;font-weight:800}
+form#send-form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line);background:#101b2e}#emoji-btn{background:#17263d;border:1px solid var(--line);color:var(--muted);font-size:17px;width:42px;flex-shrink:0}#emoji-panel{display:none;position:absolute;bottom:calc(100% + 7px);left:12px;width:270px;max-height:210px;overflow-y:auto;background:#132139;border:1px solid var(--line);border-radius:10px;padding:8px;grid-template-columns:repeat(7,1fr);gap:2px;box-shadow:var(--shadow);z-index:20}#emoji-panel.open{display:grid}.emoji-item{background:transparent;border:0;color:#fff;border-radius:6px;font-size:19px;padding:5px 0}.emoji-item:hover{background:#20334f}#send-form{position:relative}#msg-input{flex:1;background:#0c1626;border:1px solid var(--line);border-radius:9px;padding:11px 12px;color:var(--text);font-size:13px;outline:none}#send-btn{background:var(--accent2);color:#fff;font-weight:800;font-size:12px;padding:0 18px}
+#typing-indicator{padding:3px 18px;font-size:10px;color:var(--accent);min-height:20px;display:flex;align-items:center;gap:6px;font-style:italic}.typing-dots{display:inline-flex;gap:3px}.typing-dots span{width:4px;height:4px;border-radius:50%;background:var(--accent);animation:typingBounce 1.2s infinite}.typing-dots span:nth-child(2){animation-delay:.15s}.typing-dots span:nth-child(3){animation-delay:.3s}@keyframes typingBounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-3px);opacity:1}}#typing-indicator.hidden{visibility:hidden}
+#qr-overlay,#admin-overlay{display:none;position:fixed;inset:0;background:rgba(3,8,18,.78);backdrop-filter:blur(5px);align-items:center;justify-content:center;z-index:50;padding:18px}.overlay-card{background:#111c2f;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}#qr-card{padding:26px;text-align:center;max-width:320px}#qr-card h3{margin:0 0 5px;font-size:18px}#qr-card p{color:var(--muted);font-size:11px;margin:0 0 17px}#qr-code-box{background:#fff;padding:12px;border-radius:8px;display:inline-block}#qr-close{margin-top:16px;background:transparent;border:1px solid var(--line);color:var(--muted);padding:8px 18px;font-size:11px}
+/* ADMIN SECURITY CONSOLE */
+#admin-card{width:min(1180px,96vw);height:min(760px,92vh);background:#0d1727;border:1px solid #30425e;border-radius:14px;box-shadow:0 30px 90px rgba(0,0,0,.55);overflow:hidden;display:flex;flex-direction:column;padding:0;max-width:none;max-height:none}.admin-topbar{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:#101c30;border-bottom:1px solid var(--line)}.admin-brand{display:flex;align-items:center;gap:11px}.admin-logo{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#2563eb,#4da3ff);display:grid;place-items:center;color:#fff;font-weight:900}.admin-brand strong{font-size:15px}.admin-brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:1.2px;margin-top:2px}.admin-status{display:flex;align-items:center;gap:8px;font-size:10px;color:#9fb0c8;font-weight:800;letter-spacing:.7px}.admin-body{display:flex;min-height:0;flex:1}.admin-sidebar{width:330px;border-right:1px solid var(--line);background:#0b1423;display:flex;flex-direction:column;min-width:280px}.admin-side-head{padding:16px;border-bottom:1px solid var(--line)}.admin-side-title{font-size:12px;font-weight:900;letter-spacing:1px;text-transform:uppercase}.admin-side-sub{font-size:10px;color:var(--muted);margin-top:4px}.admin-stats{display:flex;gap:7px;margin-top:12px}.stat{flex:1;background:#111e32;border:1px solid var(--line);border-radius:8px;padding:8px}.stat b{display:block;font-size:18px}.stat span{font-size:9px;color:var(--muted);text-transform:uppercase}.admin-rooms{padding:10px;overflow-y:auto;flex:1}.admin-room-card{background:#101d31;border:1px solid #253650;border-radius:9px;padding:11px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:9px;transition:.15s;cursor:pointer}.admin-room-card:hover{border-color:#3d6fa8;background:#14243c}.admin-room-card.selected{border-color:var(--accent);background:#132a48;box-shadow:inset 3px 0 0 var(--accent)}.arc-left{min-width:0}.arc-code{font-size:14px;font-weight:900;letter-spacing:1.8px;color:#cfe5ff}.arc-meta{font-size:9.5px;color:var(--muted);margin-top:4px;line-height:1.45}.arc-actions{display:flex;align-items:center;gap:6px}.arc-live{font-size:8px;color:#4ade80;font-weight:900;letter-spacing:.8px}.arc-close-btn{background:transparent;border:1px solid #74363b;color:#f87171;font-size:9px;padding:5px 7px}.arc-close-btn:hover{background:#7f1d1d;color:#fff}.admin-empty{padding:30px 12px;text-align:center;color:var(--muted);font-size:11px}.admin-monitor{flex:1;min-width:0;display:flex;flex-direction:column;background:#0a1321}.monitor-head{padding:16px 18px;border-bottom:1px solid var(--line);background:#101b2e}.monitor-title-row{display:flex;justify-content:space-between;align-items:center;gap:10px}.monitor-title{font-size:16px;font-weight:900}.monitor-title span{color:var(--accent);letter-spacing:2px}.monitor-meta{font-size:10px;color:var(--muted);margin-top:5px}.monitor-actions{display:flex;gap:7px}.monitor-btn{background:#17263d;border:1px solid var(--line);color:#b6c5d8;padding:7px 10px;font-size:9px;font-weight:800}.monitor-btn:hover{border-color:var(--accent);color:#fff}.monitor-btn.danger{border-color:#71353a;color:#f87171}.monitor-users{display:flex;gap:6px;flex-wrap:wrap;padding:9px 18px;border-bottom:1px solid var(--line);background:#0d1828;min-height:39px}.monitor-user{font-size:9px;color:#c4d1e0;background:#14243a;border:1px solid #2a3d59;padding:4px 7px;border-radius:20px}.monitor-messages{flex:1;overflow-y:auto;padding:18px}.monitor-message{display:grid;grid-template-columns:90px 1fr auto;gap:10px;padding:10px 0;border-bottom:1px solid rgba(49,66,91,.45)}.monitor-message:last-child{border-bottom:0}.mm-name{font-size:11px;font-weight:900;color:#a9cfff;overflow:hidden;text-overflow:ellipsis}.mm-text{font-size:12px;line-height:1.5;white-space:pre-wrap;word-break:break-word}.mm-time{font-size:9px;color:var(--muted);white-space:nowrap}.monitor-empty{height:100%;display:grid;place-items:center;color:var(--muted);font-size:11px;text-align:center;padding:30px}.admin-footer{padding:10px 16px;border-top:1px solid var(--line);background:#101b2e;display:flex;justify-content:space-between;align-items:center}.admin-footer-note{font-size:9px;color:var(--muted)}#admin-close{background:transparent;border:1px solid var(--line);color:#aebdd0;padding:7px 14px;font-size:10px;font-weight:800}#admin-close:hover{border-color:var(--accent);color:#fff}.pin-wrap{width:min(400px,94vw);background:#111c2f;border:1px solid var(--line);border-radius:14px;padding:26px;box-shadow:var(--shadow)}.pin-wrap h3{margin:0 0 6px;font-size:19px}.pin-wrap p{color:var(--muted);font-size:11px;line-height:1.5;margin:0 0 16px}.pin-actions{display:flex;gap:8px}.pin-actions button{flex:1;padding:11px}.pin-primary{background:var(--accent2);color:#fff;font-weight:800}.pin-cancel{background:transparent;border:1px solid var(--line);color:var(--muted)}#admin-pin-error{color:#f87171;font-size:11px;margin-top:8px;min-height:14px;font-weight:700;text-align:center}
+@media(max-width:800px){body{padding:0}.admin-body{flex-direction:column}.admin-sidebar{width:100%;height:42%;min-width:0;border-right:0;border-bottom:1px solid var(--line)}.admin-monitor{height:58%}.monitor-message{grid-template-columns:70px 1fr}.admin-topbar{height:56px;padding:0 13px}#admin-card{width:100vw;height:100vh;border-radius:0}.admin-side-head{padding:11px}.admin-rooms{display:flex;gap:7px;overflow-x:auto;overflow-y:hidden}.admin-room-card{min-width:210px;margin:0}.arc-close-btn{display:none}}
+@media(max-width:480px){#chat-screen{height:100vh;border-radius:0}#start-screen,#join-screen{border-radius:0;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:24px 20px}.monitor-title{font-size:14px}.monitor-message{grid-template-columns:1fr auto}.mm-name{grid-column:1}.mm-time{grid-column:2}.mm-text{grid-column:1 / -1}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- Ambient floating hearts, purely decorative -->
+<div id="heart-field"></div>
+
+<!-- ================= SETUP WARNING (auto-hides once Firebase config is filled in) ================= -->
+<div id="setup-warning">
+  <b>Setup needed.</b> Open this file in a text editor and fill in your <code>firebaseConfig</code>
+  values near the top of the &lt;script&gt; section (search for "PASTE YOUR FIREBASE CONFIG HERE").
+  Until that's done, joining the room won't work.
+</div>
+
+<!-- ================= START SCREEN (create or join a room) ================= -->
+<div id="start-screen">
+  <div class="brand-mark">BT</div>
+  <div class="eyebrow"><span class="dot"></span> SECURE PRIVATE CHAT</div>
+  <h1>BATLAR Private Chat</h1>
+  <p class="sub">Create a private room or join an existing room using a secure 5-digit access code.</p>
+
+  <button class="choice-btn" id="create-room-btn">
+    <div>
+      <div class="cb-title">Create Private Room</div>
+      <div class="cb-sub">Generate a secure 5-digit room code</div>
+    </div>
+    <span class="cb-arrow">→</span>
+  </button>
+
+  <button class="choice-btn" id="show-join-btn">
+    <div>
+      <div class="cb-title">Join Private Room</div>
+      <div class="cb-sub">Enter the 5-digit access code</div>
+    </div>
+    <span class="cb-arrow">→</span>
+  </button>
+
+  <div id="join-code-box">
+    <label for="code-input">Room code</label>
+    <input type="text" class="code-input" id="code-input" maxlength="5" inputmode="numeric" placeholder="00000" autocomplete="off" />
+    <div id="code-error" class="sub" style="color:var(--danger); margin:8px 0 0; min-height:14px; text-align:center; font-weight:600;"></div>
+    <button id="code-continue-btn" style="width:100%; margin-top:14px; padding:13px; background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#fff; font-weight:700; font-size:14px; box-shadow:0 10px 22px rgba(224,64,125,0.35);">Continue</button>
+  </div>
+
+  <a class="back-link" id="admin-link" style="margin-top:22px; opacity:0.65; font-size:10.5px; letter-spacing:1px;">ADMIN · SECURITY CONSOLE</a>
+</div>
+
+<!-- ================= JOIN SCREEN ================= -->
+<div id="join-screen" style="display:none;">
+  <div class="brand-mark">BT</div>
+  <div class="eyebrow"><span class="dot"></span> SECURE PRIVATE CHAT</div>
+  <h1>Come on in</h1>
+  <p class="sub">Pick a name to join. You'll only see messages sent from the moment you join onward — no history. Closing this tab takes you out of the room automatically.</p>
+
+  <div id="room-code-display">
+    <div class="rcd-label">Room code</div>
+    <div class="rcd-code" id="rcd-code-value">·····</div>
+    <div class="rcd-hint">Share this code — or the QR code inside the room — so they can join too.</div>
+  </div>
+
+  <label for="name-input">Your name</label>
+  <input type="text" id="name-input" maxlength="24" placeholder="e.g. BATLAR" autocomplete="off" />
+  <div id="join-error"></div>
+  <button id="join-btn">Join Room</button>
+  <div class="back-link" id="back-to-start">← use a different room</div>
+</div>
+
+<!-- ================= CHAT SCREEN ================= -->
+<div id="chat-screen">
+  <header class="bar">
+    <div class="title">Room <span id="room-code-header" style="color:var(--accent);">·····</span> <small id="room-sub">connecting…</small></div>
+    <button id="qr-btn">Share / QR</button>
+  </header>
+
+  <div id="online-strip"></div>
+
+  <div id="messages"></div>
+
+  <div id="typing-indicator" class="hidden"></div>
+
+  <form id="send-form">
+    <button type="button" id="emoji-btn">🙂</button>
+    <div id="emoji-panel"></div>
+    <input type="text" id="msg-input" placeholder="Type your message…" maxlength="500" autocomplete="off" />
+    <button id="send-btn" type="submit">Send</button>
+  </form>
+</div>
+
+<!-- ================= QR OVERLAY ================= -->
+<div id="qr-overlay">
+  <div id="qr-card">
+    <h3>Scan to join</h3>
+    <p>Anyone who scans this joins room <span id="qr-room-code" style="color:var(--accent);"></span> directly.</p>
+    <div id="qr-code-box"></div>
+    <button id="qr-close">Close</button>
+  </div>
+</div>
+
+<!-- ================= ADMIN SECURITY CONSOLE ================= -->
+<div id="admin-overlay">
+  <div id="admin-card">
+    <div id="admin-pin-box" class="pin-wrap">
+      <h3>Administrator Authentication</h3>
+      <p>Authorized moderation access. The monitoring console is read-only: it does not create a participant presence, send messages, or publish typing status.</p>
+      <input type="password" class="code-input" id="admin-pin-input" maxlength="12" placeholder="ADMIN PIN" autocomplete="off" />
+      <div id="admin-pin-error"></div>
+      <div class="pin-actions">
+        <button id="admin-close-pin" class="pin-cancel">Cancel</button>
+        <button id="admin-pin-continue" class="pin-primary">Authenticate</button>
+      </div>
+    </div>
+
+    <div id="admin-panel-box" style="display:none;height:100%;flex-direction:column;min-height:0;">
+      <div class="admin-topbar">
+        <div class="admin-brand">
+          <div class="admin-logo">BT</div>
+          <div><strong>BATLAR Security Console</strong><small>ROOM MODERATION &amp; SAFETY MONITOR</small></div>
+        </div>
+        <div class="admin-status"><span class="dot" style="animation:none"></span> ADMIN SESSION ACTIVE</div>
+      </div>
+      <div class="admin-body">
+        <aside class="admin-sidebar">
+          <div class="admin-side-head">
+            <div class="admin-side-title">Active Chat Rooms</div>
+            <div class="admin-side-sub">Select a room to open its live read-only monitor.</div>
+            <div class="admin-stats"><div class="stat"><b id="admin-room-count">0</b><span>Rooms</span></div><div class="stat"><b id="admin-user-count">0</b><span>Users</span></div><div class="stat"><b id="admin-archive-count">0</b><span>Archived</span></div></div>
+          </div>
+          <div id="admin-rooms-list" class="admin-rooms"></div>
+          <div id="admin-empty-note" class="admin-empty" style="display:none">No active rooms right now.</div>
+        </aside>
+        <section class="admin-monitor">
+          <div class="monitor-head">
+            <div class="monitor-title-row">
+              <div><div class="monitor-title">Live Monitor <span id="monitor-room-code">—</span></div><div class="monitor-meta" id="monitor-meta">Select an active room from the left.</div></div>
+              <div class="monitor-actions"><button id="monitor-refresh" class="monitor-btn">Refresh</button><button id="monitor-export-pdf" class="monitor-btn" style="display:none">↓ Export PDF</button><button id="monitor-close-room" class="monitor-btn danger" style="display:none">Close Room</button></div>
+            </div>
+          </div>
+          <div id="monitor-users" class="monitor-users"></div>
+          <div id="monitor-messages" class="monitor-messages"><div class="monitor-empty">No room selected.<br>Choose an active room to begin monitoring.</div></div>
+        </section>
+      </div>
+      <div class="admin-footer"><div class="admin-footer-note">READ-ONLY MODERATION MODE · ADMIN DOES NOT JOIN THE ROOM</div><button id="admin-close">Exit Console</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================================
+   1) FIREBASE CONFIG — REQUIRED
+   -------------------------------------------------------------------------
+   Go to https://console.firebase.google.com → create a free project →
+   Build → Realtime Database → Create Database (start in test mode) →
+   Project settings (gear icon) → General → scroll to "Your apps" →
+   add a Web app → copy the config object it gives you and paste it below,
+   replacing the placeholder values.
+   ========================================================================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyBfmGbNPGjHXlu3DGaohd9fyfo9gGnxIcs",
+  authDomain: "batlar-001.firebaseapp.com",
+  databaseURL: "https://batlar-001-default-rtdb.firebaseio.com",
+  projectId: "batlar-001",
+  appId: "1:724724373404:web:e150c03717e4b36cb35a59"
+};
+
+/* =========================================================================
+   2) ADMIN PIN — change this before sharing the room with anyone
+   -------------------------------------------------------------------------
+   This gates the safety panel (room codes, headcounts, timestamps only —
+   never message content). It's a simple client-side lock, not real auth:
+   anyone who reads this file's source can find it. For real protection,
+   pair this with Firebase Security Rules that restrict who can read/write
+   the `roomsIndex` path using Firebase Authentication.
+   ========================================================================= */
+const ADMIN_PIN = "001100"; // Change this. For production, replace client-side PIN auth with Firebase Authentication + Security Rules.
+
+/* ========================================================================= */
+
+const isConfigured = !Object.values(firebaseConfig).some(v => String(v).includes("PASTE YOUR"));
+
+if (!isConfigured) {
+  document.getElementById('setup-warning').style.display = 'block';
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('create-room-btn').disabled = true;
+    document.getElementById('show-join-btn').disabled = true;
+  });
+}
+
+let db;
+let roomsIndexRef; // active-room metadata only
+let archivedRoomsRef;
+if (isConfigured) {
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.database();
+  roomsIndexRef = db.ref('roomsIndex');
+  archivedRoomsRef = db.ref('archivedRooms');
+}
+
+let ROOM_ID = "";
+let roomRef, usersRef, messagesRef, presenceRef, typingRef, myTypingRef;
+let myName = "";
+let myJoinTime = 0;
+let myPresenceKey = null;
+
+const startScreen = document.getElementById('start-screen');
+const joinScreen = document.getElementById('join-screen');
+const chatScreen = document.getElementById('chat-screen');
+const createRoomBtn = document.getElementById('create-room-btn');
+const showJoinBtn = document.getElementById('show-join-btn');
+const joinCodeBox = document.getElementById('join-code-box');
+const codeInput = document.getElementById('code-input');
+const codeError = document.getElementById('code-error');
+const codeContinueBtn = document.getElementById('code-continue-btn');
+const roomCodeDisplay = document.getElementById('room-code-display');
+const rcdCodeValue = document.getElementById('rcd-code-value');
+const backToStart = document.getElementById('back-to-start');
+const nameInput = document.getElementById('name-input');
+const joinBtn = document.getElementById('join-btn');
+const joinError = document.getElementById('join-error');
+const onlineStrip = document.getElementById('online-strip');
+const messagesEl = document.getElementById('messages');
+const sendForm = document.getElementById('send-form');
+const msgInput = document.getElementById('msg-input');
+const sendBtn = document.getElementById('send-btn');
+const roomSub = document.getElementById('room-sub');
+const roomCodeHeader = document.getElementById('room-code-header');
+
+function generateRoomCode(){
+  return String(Math.floor(10000 + Math.random() * 90000)); // random 5-digit number, 10000–99999
+}
+
+// Checks Firebase to see if a room code actually exists and is currently active
+// (has an owner who created it and has not been closed / emptied out yet).
+function checkRoomActive(roomId){
+  if (!isConfigured) return Promise.resolve(false);
+  return db.ref('rooms/' + roomId + '/meta/active').once('value')
+    .then(snap => snap.val() === true)
+    .catch(() => false);
+}
+
+function goToJoinScreen(roomId, { generated } = {}){
+  ROOM_ID = roomId;
+  if (isConfigured){
+    roomRef = db.ref('rooms/' + ROOM_ID);
+    usersRef = roomRef.child('users');
+    messagesRef = roomRef.child('messages');
+    typingRef = roomRef.child('typing');
+  }
+  startScreen.style.display = 'none';
+  joinScreen.style.display = 'block';
+  if (generated){
+    roomCodeDisplay.style.display = 'block';
+    rcdCodeValue.textContent = roomId;
+  } else {
+    roomCodeDisplay.style.display = 'none';
+  }
+  nameInput.focus();
+}
+
+createRoomBtn.addEventListener('click', () => {
+  if (!isConfigured) return;
+  const code = generateRoomCode();
+  // Mark the room active immediately so it becomes a real, joinable room —
+  // random codes typed by someone else won't match anything until this happens.
+  const createdAt = firebase.database.ServerValue.TIMESTAMP;
+  db.ref('rooms/' + code + '/meta').set({ active: true, createdAt });
+  // Denormalized metadata-only record for the admin safety panel.
+  // Deliberately separate from `rooms/{code}` so the admin view never has to
+  // touch (or download) the room's actual messages.
+  roomsIndexRef.child(code).set({ active: true, createdAt, userCount: 0, lastActivity: createdAt });
+  goToJoinScreen(code, { generated: true });
+});
+
+showJoinBtn.addEventListener('click', () => {
+  joinCodeBox.style.display = 'block';
+  codeInput.focus();
+});
+
+codeContinueBtn.addEventListener('click', () => {
+  const code = codeInput.value.trim();
+  if (!/^\d{5}$/.test(code)){
+    codeError.textContent = 'Enter the 5-digit code exactly as shared with you.';
+    return;
+  }
+  codeError.textContent = '';
+  codeContinueBtn.disabled = true;
+  codeContinueBtn.textContent = 'Checking…';
+  checkRoomActive(code).then(active => {
+    codeContinueBtn.disabled = false;
+    codeContinueBtn.textContent = 'Continue';
+    if (!active){
+      codeError.textContent = 'This room doesn\'t exist or is no longer active. Ask for a fresh code.';
+      return;
+    }
+    goToJoinScreen(code, { generated: false });
+  });
+});
+codeInput.addEventListener('keydown', e => { if (e.key === 'Enter') codeContinueBtn.click(); });
+
+backToStart.addEventListener('click', () => {
+  joinScreen.style.display = 'none';
+  startScreen.style.display = 'block';
+  joinCodeBox.style.display = 'none';
+  codeInput.value = '';
+  nameInput.value = '';
+  joinError.textContent = '';
+});
+
+// If the page was opened via a QR code / shared link like ?room=12345, skip straight to name entry —
+// but only if that room is actually still active.
+(function checkRoomInUrl(){
+  const params = new URLSearchParams(window.location.search);
+  const roomParam = params.get('room');
+  if (roomParam && /^\d{5}$/.test(roomParam)){
+    checkRoomActive(roomParam).then(active => {
+      if (active){
+        goToJoinScreen(roomParam, { generated: false });
+      } else {
+        codeError.textContent = 'That room link is no longer active — it may have closed after everyone left.';
+      }
+    });
+  }
+})();
+
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function fmtTime(ts){
+  const d = new Date(ts);
+  return d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+}
+
+function addSystemLine(text){
+  const line = document.createElement('div');
+  line.className = 'system-line';
+  line.textContent = text;
+  messagesEl.appendChild(line);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function addJoinMarker(){
+  const marker = document.createElement('div');
+  marker.id = 'join-marker';
+  marker.textContent = '— you joined here · earlier messages are hidden —';
+  messagesEl.appendChild(marker);
+}
+
+function renderMessage(msg){
+  const entry = document.createElement('div');
+  entry.className = 'entry' + (msg.name === myName ? ' me' : '');
+  entry.innerHTML = `
+    <div class="rail"></div>
+    <div class="body">
+      <div class="meta">
+        <span class="name">${escapeHtml(msg.name)}</span>
+        <span class="time">${fmtTime(msg.timestamp)}</span>
+      </div>
+      <div class="text">${escapeHtml(msg.text)}</div>
+    </div>`;
+  messagesEl.appendChild(entry);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+let onlineCount = 0; // how many people this client currently sees in the room
+let roomClosedHandled = false;
+
+function renderOnlineUsers(usersObj){
+  const names = Object.values(usersObj || {}).map(u => u.name);
+  onlineCount = names.length;
+
+  onlineStrip.innerHTML = '';
+  names.forEach(n => {
+    const b = document.createElement('div');
+    b.className = 'badge';
+    b.innerHTML = `<span class="dot" style="animation:none;"></span> ${escapeHtml(n)}`;
+    onlineStrip.appendChild(b);
+  });
+
+  // If the users list is empty, everyone has left this room — close it for good
+  // so the code can no longer be used to join. Whichever client is still around
+  // to see this (e.g. the second-to-last person leaving) performs the cleanup.
+  if (names.length === 0 && roomRef && myPresenceKey){
+    // Keep the room data so Admin can export the complete chat after everyone leaves.
+    roomRef.child('meta').update({active:false, closedAt:Date.now()});
+    if (roomsIndexRef) roomsIndexRef.child(ROOM_ID).update({active:false, closedAt:Date.now()});
+  }
+}
+
+function joinRoom(){
+  const name = nameInput.value.trim();
+  if (!name){
+    joinError.textContent = 'Please enter a name.';
+    return;
+  }
+  if (!isConfigured){
+    joinError.textContent = 'Firebase is not configured yet — see the setup notice above.';
+    return;
+  }
+
+  joinBtn.disabled = true;
+  joinError.textContent = '';
+
+  // Final, authoritative check right before entry — the room must still be active.
+  checkRoomActive(ROOM_ID).then(active => {
+    if (!active){
+      joinBtn.disabled = false;
+      joinError.textContent = 'This room doesn\'t exist or has closed (everyone left). Go back and use a fresh code.';
+      return;
+    }
+    enterRoom(name);
+  });
+}
+
+function enterRoom(name){
+  myName = name;
+  myJoinTime = Date.now();
+
+  // Register presence
+  presenceRef = usersRef.push();
+  myPresenceKey = presenceRef.key;
+  presenceRef.set({ name: myName, joinedAt: myJoinTime });
+  // Auto-remove this user the moment their connection drops (tab closed, browser closed, network lost)
+  presenceRef.onDisconnect().remove();
+
+  // Metadata-only headcount for the admin safety panel — no message content ever touches this.
+  if (roomsIndexRef){
+    const idxRef = roomsIndexRef.child(ROOM_ID);
+    idxRef.update({
+      userCount: firebase.database.ServerValue.increment(1),
+      lastActivity: firebase.database.ServerValue.TIMESTAMP
+    });
+    idxRef.child('userCount').onDisconnect().set(firebase.database.ServerValue.increment(-1));
+  }
+
+  // Also remove on manual navigation away, as a backup. If this client is the
+  // last one left in the room, close the whole room instead of just leaving.
+  window.addEventListener('pagehide', () => {
+    if (roomsIndexRef) roomsIndexRef.child(ROOM_ID).child('userCount').onDisconnect().cancel();
+    if (onlineCount <= 1 && roomRef){
+      // Preserve complete chat history for Admin export.
+      roomRef.child('meta').update({active:false, closedAt:Date.now()});
+      if (roomsIndexRef) roomsIndexRef.child(ROOM_ID).update({active:false, closedAt:Date.now()});
+    } else {
+      presenceRef.remove();
+      if (roomsIndexRef){
+        roomsIndexRef.child(ROOM_ID).update({
+          userCount: firebase.database.ServerValue.increment(-1),
+          lastActivity: firebase.database.ServerValue.TIMESTAMP
+        });
+      }
+    }
+  });
+
+  // Watch online users list
+  usersRef.on('value', snap => renderOnlineUsers(snap.val()));
+
+  // Watch whether the room itself is still active — if another tab/device closes it
+  // (last person left there), reflect that here too.
+  roomRef.child('meta/active').on('value', snap => {
+    if (snap.val() !== true && !roomClosedHandled){
+      roomClosedHandled = true;
+      addSystemLine('This room has closed — everyone has left.');
+      msgInput.disabled = true;
+      sendBtn.disabled = true;
+      roomSub.textContent = 'room closed';
+    }
+  });
+
+  // Typing presence — my own typing flag, auto-removed on disconnect
+  myTypingRef = typingRef.child(myPresenceKey);
+  myTypingRef.set(null); // start as not-typing
+  myTypingRef.onDisconnect().remove();
+
+  // Watch everyone else's typing state
+  typingRef.on('value', snap => renderTypingIndicator(snap.val()));
+
+  // Show chat screen
+  joinScreen.style.display = 'none';
+  document.getElementById('setup-warning').style.display = 'none';
+  chatScreen.style.display = 'flex';
+  roomSub.textContent = 'joined as ' + myName;
+  roomCodeHeader.textContent = ROOM_ID;
+
+  addJoinMarker();
+  addSystemLine('You joined the room. Watching for new messages only.');
+
+  // Only listen to messages with timestamp >= the moment I joined — no history
+  messagesRef.orderByChild('timestamp').startAt(myJoinTime).on('child_added', snap => {
+    renderMessage(snap.val());
+  });
+
+  msgInput.focus();
+}
+
+function sendMessage(e){
+  e.preventDefault();
+  const text = msgInput.value.trim();
+  if (!text) return;
+  messagesRef.push({
+    name: myName,
+    text: text,
+    timestamp: Date.now()
+  });
+  msgInput.value = '';
+  if (myTypingRef) myTypingRef.set(null);
+  clearTimeout(typingStopTimer);
+}
+
+/* ---------------- Typing indicator ---------------- */
+const typingIndicatorEl = document.getElementById('typing-indicator');
+let typingStopTimer = null;
+
+function renderTypingIndicator(typingObj){
+  const names = Object.values(typingObj || {})
+    .map(t => t && t.name)
+    .filter(n => n && n !== myName);
+
+  if (names.length === 0){
+    typingIndicatorEl.classList.add('hidden');
+    typingIndicatorEl.innerHTML = '';
+    return;
+  }
+
+  let label;
+  if (names.length === 1) label = `${escapeHtml(names[0])} is typing`;
+  else if (names.length === 2) label = `${escapeHtml(names[0])} and ${escapeHtml(names[1])} are typing`;
+  else label = `${names.length} people are typing`;
+
+  typingIndicatorEl.classList.remove('hidden');
+  typingIndicatorEl.innerHTML = `${label} <span class="typing-dots"><span></span><span></span><span></span></span>`;
+}
+
+msgInput.addEventListener('input', () => {
+  if (!myTypingRef) return;
+  if (msgInput.value.trim().length > 0){
+    myTypingRef.set({ name: myName, at: Date.now() });
+  } else {
+    myTypingRef.set(null);
+  }
+  clearTimeout(typingStopTimer);
+  typingStopTimer = setTimeout(() => {
+    if (myTypingRef) myTypingRef.set(null);
+  }, 3000); // stop showing "typing" after 3s of inactivity
+});
+
+joinBtn.addEventListener('click', joinRoom);
+nameInput.addEventListener('keydown', e => { if (e.key === 'Enter') joinRoom(); });
+sendForm.addEventListener('submit', sendMessage);
+
+/* ---------------- Emoji picker ---------------- */
+const emojiBtn = document.getElementById('emoji-btn');
+const emojiPanel = document.getElementById('emoji-panel');
+
+const EMOJI_LIST = [
+  "😀","😂","🤣","😊","😍","😘","😉","😎","🤔","😅",
+  "😢","😭","😡","😱","🥳","😴","🙄","😇","🤗","🤩",
+  "👍","👎","👏","🙏","💪","🤝","👋","✌️","🤞","👌",
+  "❤️","💔","🔥","✨","🎉","💯","⭐","🌟","💥","👀",
+  "🙈","🤦","🤷","💀","👻","🎶","☕","🍕","🎂","🥂"
+];
+
+EMOJI_LIST.forEach(emo => {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'emoji-item';
+  b.textContent = emo;
+  b.addEventListener('click', () => {
+    msgInput.value += emo;
+    msgInput.focus();
+  });
+  emojiPanel.appendChild(b);
+});
+
+emojiBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  emojiPanel.classList.toggle('open');
+});
+
+document.addEventListener('click', (e) => {
+  if (!emojiPanel.contains(e.target) && e.target !== emojiBtn){
+    emojiPanel.classList.remove('open');
+  }
+});
+
+/* ---------------- QR code ---------------- */
+const qrBtn = document.getElementById('qr-btn');
+const qrOverlay = document.getElementById('qr-overlay');
+const qrClose = document.getElementById('qr-close');
+const qrBox = document.getElementById('qr-code-box');
+let qrGenerated = false;
+
+const qrRoomCodeLabel = document.getElementById('qr-room-code');
+
+qrBtn.addEventListener('click', () => {
+  qrOverlay.style.display = 'flex';
+  qrRoomCodeLabel.textContent = ROOM_ID;
+  const shareUrl = window.location.origin + window.location.pathname + '?room=' + ROOM_ID;
+  if (!qrGenerated){
+    new QRCode(qrBox, {
+      text: shareUrl,
+      width: 200,
+      height: 200,
+      colorDark: "#0F1B1E",
+      colorLight: "#ffffff"
+    });
+    qrGenerated = true;
+  }
+});
+qrClose.addEventListener('click', () => { qrOverlay.style.display = 'none'; });
+qrOverlay.addEventListener('click', (e) => { if (e.target === qrOverlay) qrOverlay.style.display = 'none'; });
+
+/* ---------------- BATLAR Security Console ---------------- */
+const adminLink = document.getElementById('admin-link');
+const adminOverlay = document.getElementById('admin-overlay');
+const adminPinBox = document.getElementById('admin-pin-box');
+const adminPanelBox = document.getElementById('admin-panel-box');
+const adminPinInput = document.getElementById('admin-pin-input');
+const adminPinError = document.getElementById('admin-pin-error');
+const adminPinContinue = document.getElementById('admin-pin-continue');
+const adminCloseIcon = document.getElementById('admin-close-pin');
+const adminClose = document.getElementById('admin-close');
+const adminRoomsList = document.getElementById('admin-rooms-list');
+const adminEmptyNote = document.getElementById('admin-empty-note');
+const adminRoomCount = document.getElementById('admin-room-count');
+const adminUserCount = document.getElementById('admin-user-count');
+const adminArchiveCount = document.getElementById('admin-archive-count');
+const monitorRoomCode = document.getElementById('monitor-room-code');
+const monitorMeta = document.getElementById('monitor-meta');
+const monitorUsers = document.getElementById('monitor-users');
+const monitorMessages = document.getElementById('monitor-messages');
+const monitorRefresh = document.getElementById('monitor-refresh');
+const monitorCloseRoom = document.getElementById('monitor-close-room');
+const monitorExportPdf = document.getElementById('monitor-export-pdf');
+let adminUnlocked = false;
+let adminRoomsCache = {};
+let adminArchivedCache = {};
+let adminSelectedRoom = '';
+let adminMessagesRef = null;
+let adminUsersRef = null;
+let adminMessagesHandler = null;
+let adminUsersHandler = null;
+
+function openAdminOverlay(){
+  adminOverlay.style.display='flex';
+  if(adminUnlocked) showAdminPanel();
+  else { adminPinBox.style.display='block'; adminPanelBox.style.display='none'; adminPinInput.value=''; adminPinError.textContent=''; setTimeout(()=>adminPinInput.focus(),50); }
+}
+function stopAdminMonitor(){
+  if(adminMessagesRef && adminMessagesHandler) adminMessagesRef.off('child_added',adminMessagesHandler);
+  if(adminUsersRef && adminUsersHandler) adminUsersRef.off('value',adminUsersHandler);
+  adminMessagesRef=null; adminUsersRef=null; adminMessagesHandler=null; adminUsersHandler=null;
+}
+function closeAdminOverlay(){
+  stopAdminMonitor();
+  if(roomsIndexRef) roomsIndexRef.off('value',renderAdminRooms);
+  if(archivedRoomsRef) archivedRoomsRef.off('value',renderAdminRooms);
+  adminOverlay.style.display='none';
+  adminSelectedRoom='';
+}
+adminLink.addEventListener('click',openAdminOverlay);
+adminCloseIcon.addEventListener('click',closeAdminOverlay);
+adminClose.addEventListener('click',closeAdminOverlay);
+adminOverlay.addEventListener('click',e=>{if(e.target===adminOverlay)closeAdminOverlay()});
+adminPinContinue.addEventListener('click',()=>{
+  if(adminPinInput.value===ADMIN_PIN){ adminUnlocked=true; adminPinError.textContent=''; showAdminPanel(); }
+  else adminPinError.textContent='Incorrect administrator PIN.';
+});
+adminPinInput.addEventListener('keydown',e=>{if(e.key==='Enter')adminPinContinue.click()});
+monitorRefresh.addEventListener('click',()=>{ if(adminSelectedRoom){ const archived=!!adminArchivedCache[adminSelectedRoom]; selectAdminRoom(adminSelectedRoom,archived); } else showAdminPanel(); });
+monitorExportPdf.addEventListener('click',exportSelectedRoomPDF);
+monitorCloseRoom.addEventListener('click',()=>closeMonitoredRoom());
+
+function showAdminPanel(){
+  adminPinBox.style.display='none'; adminPanelBox.style.display='flex';
+  if(!isConfigured || !roomsIndexRef){adminRoomsList.innerHTML='';adminEmptyNote.style.display='block';adminEmptyNote.textContent='Firebase is not configured.';return;}
+  roomsIndexRef.off('value',renderAdminRooms);
+  roomsIndexRef.on('value',renderAdminRooms);
+}
+function fmtAdminTime(ts){if(!ts)return '—';return new Date(ts).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'});}
+function renderAdminRooms(snap){
+  // This handler is attached to both active and archived refs.
+  const path = snap.ref && snap.ref.parent ? snap.ref.parent.key : '';
+  if(path === 'archivedRooms') adminArchivedCache = snap.val() || {};
+  else adminRoomsCache = snap.val() || {};
+
+  const activeRooms = Object.entries(adminRoomsCache)
+    .filter(([,v])=>v&&v.active)
+    .sort((a,b)=>(b[1].lastActivity||0)-(a[1].lastActivity||0));
+
+  const closedRooms = Object.entries(adminRoomsCache)
+    .filter(([,v])=>v && v.active === false)
+    .sort((a,b)=>(b[1].closedAt||b[1].lastActivity||0)-(a[1].closedAt||a[1].lastActivity||0));
+
+  const archivedRooms = Object.entries(adminArchivedCache)
+    .filter(([,v])=>v)
+    .sort((a,b)=>(b[1].closedAt||b[1].lastActivity||0)-(a[1].closedAt||a[1].lastActivity||0));
+
+  adminRoomCount.textContent = activeRooms.length;
+  adminArchiveCount.textContent = closedRooms.length + archivedRooms.length;
+  adminUserCount.textContent = activeRooms.reduce((sum,[,v])=>sum+Math.max(0,Number(v.userCount)||0),0);
+  adminRoomsList.innerHTML='';
+
+  if(!activeRooms.length && !closedRooms.length && !archivedRooms.length){
+    adminEmptyNote.style.display='block';
+    adminEmptyNote.textContent='No active or archived rooms right now.';
+    clearAdminMonitor();
+    return;
+  }
+
+  adminEmptyNote.style.display='none';
+
+  activeRooms.forEach(([code,meta])=>{
+    const count=Math.max(0,Number(meta.userCount)||0);
+    const card=document.createElement('div');
+    card.className='admin-room-card'+(code===adminSelectedRoom?' selected':'');
+    card.dataset.code=code;
+    card.dataset.archived='false';
+    card.innerHTML=`<div class="arc-left"><div class="arc-code">ROOM ${escapeHtml(code)}</div><div class="arc-meta">${count} ${count===1?'user':'users'} · Created ${fmtAdminTime(meta.createdAt)}<br>Last activity ${fmtAdminTime(meta.lastActivity)}</div></div><div class="arc-actions"><span class="arc-live">● LIVE</span><button class="arc-close-btn" type="button">Close</button></div>`;
+    card.addEventListener('click',e=>{if(e.target.closest('.arc-close-btn'))return;selectAdminRoom(code,false)});
+    card.querySelector('.arc-close-btn').addEventListener('click',e=>{e.stopPropagation();closeRoomByCode(code)});
+    adminRoomsList.appendChild(card);
+  });
+
+  closedRooms.forEach(([code,meta])=>{
+    const card=document.createElement('div');
+    card.className='admin-room-card'+(code===adminSelectedRoom?' selected':'');
+    card.dataset.code=code;
+    card.dataset.archived='false';
+    card.dataset.closed='true';
+    card.innerHTML=`<div class="arc-left"><div class="arc-code">CLOSED ${escapeHtml(code)}</div><div class="arc-meta">Chat preserved · Closed ${fmtAdminTime(meta.closedAt||meta.lastActivity)}</div></div><div class="arc-actions"><span style="font-size:8px;color:#fbbf24;font-weight:900;letter-spacing:.8px">● CLOSED</span></div>`;
+    card.addEventListener('click',()=>selectAdminRoom(code,false));
+    adminRoomsList.appendChild(card);
+  });
+
+  archivedRooms.forEach(([code,meta])=>{
+    const card=document.createElement('div');
+    card.className='admin-room-card'+(code===adminSelectedRoom?' selected':'');
+    card.dataset.code=code;
+    card.dataset.archived='true';
+    card.innerHTML=`<div class="arc-left"><div class="arc-code">ARCHIVE ${escapeHtml(code)}</div><div class="arc-meta">${Number(meta.messageCount)||0} messages · Closed ${fmtAdminTime(meta.closedAt||meta.lastActivity)}</div></div><div class="arc-actions"><span style="font-size:8px;color:#fbbf24;font-weight:900;letter-spacing:.8px">● ARCHIVED</span></div>`;
+    card.addEventListener('click',()=>selectAdminRoom(code,true));
+    adminRoomsList.appendChild(card);
+  });
+
+  if(adminSelectedRoom){
+    const exists = !!adminRoomsCache[adminSelectedRoom] || !!adminArchivedCache[adminSelectedRoom];
+    if(!exists) clearAdminMonitor();
+  }
+}
+
+function clearAdminMonitor(){stopAdminMonitor();adminSelectedRoom='';monitorRoomCode.textContent='—';monitorMeta.textContent='Select an active room from the left.';monitorUsers.innerHTML='';monitorMessages.innerHTML='<div class="monitor-empty">No room selected.<br>Choose an active room to begin monitoring.</div>';monitorCloseRoom.style.display='none';monitorExportPdf.style.display='none';}
+function selectAdminRoom(code,isArchived=false){
+  if(!adminUnlocked || !isConfigured || !db) return;
+
+  stopAdminMonitor();
+  adminSelectedRoom=code;
+
+  const meta = isArchived ? adminArchivedCache[code] : adminRoomsCache[code];
+  if(!meta) return;
+
+  monitorRoomCode.textContent=code;
+  monitorExportPdf.style.display='inline-block';
+  monitorCloseRoom.style.display=isArchived?'none':'inline-block';
+
+  if(isArchived){
+    monitorMeta.textContent=`${Number(meta.messageCount)||0} messages · Closed ${fmtAdminTime(meta.closedAt||meta.lastActivity)} · ARCHIVED · READ-ONLY`;
+    monitorUsers.innerHTML='<span class="monitor-user">Archived room</span>';
+    monitorMessages.innerHTML='';
+
+    const archivedMessagesRef=db.ref('archivedRooms/'+code+'/messages');
+    adminMessagesRef=archivedMessagesRef;
+    adminMessagesHandler=snap=>appendMonitorMessage(snap.key,snap.val());
+    archivedMessagesRef.orderByChild('timestamp').on('child_added',adminMessagesHandler);
+  } else {
+    monitorMeta.textContent=`${Math.max(0,Number(meta.userCount)||0)} online · Created ${fmtAdminTime(meta.createdAt)} · Last activity ${fmtAdminTime(meta.lastActivity)} · READ-ONLY`;
+    monitorMessages.innerHTML='';
+
+    const room=db.ref('rooms/'+code);
+    adminUsersRef=room.child('users');
+    adminMessagesRef=room.child('messages');
+    adminUsersHandler=snap=>renderMonitorUsers(snap.val());
+    adminUsersRef.on('value',adminUsersHandler);
+    adminMessagesHandler=snap=>appendMonitorMessage(snap.key,snap.val());
+    adminMessagesRef.orderByChild('timestamp').on('child_added',adminMessagesHandler);
+  }
+
+  adminRoomsList.querySelectorAll('.admin-room-card').forEach(c=>c.classList.toggle('selected',c.dataset.code===code));
+}
+
+function renderMonitorUsers(usersObj){
+  const users=Object.values(usersObj||{}); monitorUsers.innerHTML='';
+  if(!users.length){monitorUsers.innerHTML='<span class="monitor-user">No users currently connected</span>';return;}
+  users.forEach(u=>{const el=document.createElement('span');el.className='monitor-user';el.textContent='● '+(u.name||'Unknown');monitorUsers.appendChild(el)});
+}
+function appendMonitorMessage(key,msg){
+  if(!msg || !adminSelectedRoom)return;
+  if(monitorMessages.querySelector('[data-message-id="'+CSS.escape(key)+'"]'))return;
+  const empty=monitorMessages.querySelector('.monitor-empty');if(empty)empty.remove();
+  const row=document.createElement('div');row.className='monitor-message';row.dataset.messageId=key;
+  const name=document.createElement('div');name.className='mm-name';name.textContent=msg.name||'Unknown';
+  const text=document.createElement('div');text.className='mm-text';text.textContent=msg.text||'';
+  const time=document.createElement('div');time.className='mm-time';time.textContent=fmtTime(msg.timestamp);
+  row.append(name,text,time);monitorMessages.appendChild(row);monitorMessages.scrollTop=monitorMessages.scrollHeight;
+}
+async function closeRoomByCode(code){
+  if(!adminUnlocked || !db || !roomsIndexRef) return;
+
+  if(!confirm('Close room '+code+'? The complete chat will be archived first, then participants will be disconnected.')) return;
+
+  try{
+    const roomRefToArchive=db.ref('rooms/'+code);
+    const snapshot=await roomRefToArchive.once('value');
+    const roomData=snapshot.val();
+
+    if(!roomData){
+      await roomsIndexRef.child(code).remove();
+      return;
+    }
+
+    const messages=roomData.messages || {};
+    const messageCount=Object.keys(messages).length;
+    const closedAt=Date.now();
+
+    // Preserve the complete room before deleting the live room.
+    await db.ref('archivedRooms/'+code).set({
+      meta: Object.assign({}, roomData.meta || {}, {
+        active:false,
+        closedAt:closedAt,
+        messageCount:messageCount
+      }),
+      messages:messages,
+      closedAt:closedAt,
+      messageCount:messageCount
+    });
+
+    await roomRefToArchive.remove();
+    await roomsIndexRef.child(code).remove();
+
+    if(adminSelectedRoom===code) selectAdminRoom(code,true);
+
+  }catch(err){
+    console.error(err);
+    alert('Unable to archive/close room: '+err.message);
+  }
+}
+
+async function exportSelectedRoomPDF(){
+  if(!adminUnlocked){ alert('Administrator authentication required.'); return; }
+  if(!adminSelectedRoom){ alert('Please select a chat room first.'); return; }
+  if(!db){ alert('Firebase is not configured.'); return; }
+
+  const btn=monitorExportPdf;
+  try{
+    btn.disabled=true;
+    btn.textContent='Generating...';
+
+    let snapshot;
+    let archived=!!adminArchivedCache[adminSelectedRoom];
+
+    if(archived){
+      snapshot=await db.ref('archivedRooms/'+adminSelectedRoom+'/messages').orderByChild('timestamp').once('value');
+    }else{
+      snapshot=await db.ref('rooms/'+adminSelectedRoom+'/messages').orderByChild('timestamp').once('value');
+    }
+
+    const messages=[];
+    snapshot.forEach(child=>{
+      const msg=child.val();
+      if(msg) messages.push({
+        name:msg.name||'Unknown',
+        text:msg.text||'',
+        timestamp:Number(msg.timestamp)||0
+      });
+    });
+
+    messages.sort((a,b)=>a.timestamp-b.timestamp);
+
+    if(!messages.length){ alert('No messages found in this chat room.'); return; }
+    if(!window.jspdf || !window.jspdf.jsPDF){ alert('PDF library is not loaded. Check your internet connection.'); return; }
+
+    const {jsPDF}=window.jspdf;
+    const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const pageWidth=pdf.internal.pageSize.getWidth();
+    const pageHeight=pdf.internal.pageSize.getHeight();
+    const ml=15, mr=15, mt=20, mb=18;
+    const usableWidth=pageWidth-ml-mr;
+    let y=mt;
+
+    pdf.setFont('helvetica','bold');
+    pdf.setFontSize(18);
+    pdf.setTextColor(25,40,60);
+    pdf.text('BATLAR PRIVATE CHAT',ml,y);
+    y+=8;
+
+    pdf.setFont('helvetica','normal');
+    pdf.setFontSize(10);
+    pdf.setTextColor(70,80,90);
+    pdf.text('Chat Code: '+adminSelectedRoom,ml,y); y+=5;
+    pdf.text('Status: '+(archived?'ARCHIVED':'ACTIVE'),ml,y); y+=5;
+    pdf.text('Exported: '+formatPdfDateTime(new Date()),ml,y); y+=5;
+    pdf.text('Total Messages: '+messages.length,ml,y); y+=7;
+
+    pdf.setDrawColor(170,180,190);
+    pdf.line(ml,y,pageWidth-mr,y);
+    y+=8;
+
+    messages.forEach(msg=>{
+      const sender=msg.name||'Unknown';
+      const time=msg.timestamp?formatPdfDateTime(new Date(msg.timestamp)):'Unknown time';
+      const lines=pdf.splitTextToSize(msg.text||'',usableWidth);
+      const lineHeight=4.5;
+      const required=(lines.length*lineHeight)+13;
+
+      if(y+required>pageHeight-mb){
+        pdf.addPage();
+        y=mt;
+        pdf.setFont('helvetica','bold');
+        pdf.setFontSize(11);
+        pdf.setTextColor(25,40,60);
+        pdf.text('BATLAR PRIVATE CHAT — '+adminSelectedRoom,ml,y);
+        y+=9;
+      }
+
+      pdf.setFont('helvetica','bold');
+      pdf.setFontSize(10);
+      pdf.setTextColor(35,55,80);
+      pdf.text(sender+'  •  '+time,ml,y);
+      y+=5;
+
+      pdf.setFont('helvetica','normal');
+      pdf.setFontSize(10);
+      pdf.setTextColor(35,35,35);
+      pdf.text(lines,ml,y);
+      y+=lines.length*lineHeight+4;
+
+      pdf.setDrawColor(225,228,232);
+      pdf.line(ml,y,pageWidth-mr,y);
+      y+=5;
+    });
+
+    const totalPages=pdf.internal.getNumberOfPages();
+    for(let page=1;page<=totalPages;page++){
+      pdf.setPage(page);
+      pdf.setFont('helvetica','normal');
+      pdf.setFontSize(8);
+      pdf.setTextColor(120,120,120);
+      pdf.text('BATLAR Security Console • Confidential',ml,pageHeight-8);
+      pdf.text('Page '+page+' of '+totalPages,pageWidth-mr-25,pageHeight-8);
+    }
+
+    const fileName=adminSelectedRoom+'_'+formatPdfFileDateTime(new Date())+'.pdf';
+    pdf.save(fileName);
+  }catch(error){
+    console.error('PDF Export Error:',error);
+    alert('Unable to export chat PDF.\n\n'+error.message);
+  }finally{
+    btn.disabled=false;
+    btn.textContent='↓ Export PDF';
+  }
+}
+
+function formatPdfDateTime(date){
+  const day=String(date.getDate()).padStart(2,'0');
+  const month=date.toLocaleString('en-US',{month:'short'});
+  const year=date.getFullYear();
+  const hours=String(date.getHours()).padStart(2,'0');
+  const minutes=String(date.getMinutes()).padStart(2,'0');
+  const seconds=String(date.getSeconds()).padStart(2,'0');
+  return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+}
+
+function formatPdfFileDateTime(date){
+  const day=String(date.getDate()).padStart(2,'0');
+  const month=String(date.getMonth()+1).padStart(2,'0');
+  const year=date.getFullYear();
+  const hours=String(date.getHours()).padStart(2,'0');
+  const minutes=String(date.getMinutes()).padStart(2,'0');
+  const seconds=String(date.getSeconds()).padStart(2,'0');
+  return `${day}-${month}-${year}_${hours}-${minutes}-${seconds}`;
+}
+
+function closeMonitoredRoom(){if(adminSelectedRoom)closeRoomByCode(adminSelectedRoom)}
+
+</script>
+
+</body>
+</html>
